@@ -151,7 +151,7 @@ nothing to commit, working tree clean`,
   }
 
   return (
-    <div className={`absolute ${isMaximized ? "inset-8" : "top-1/4 left-1/4 w-1/2 h-1/2"} rounded-lg shadow-2xl border overflow-hidden transition-all duration-300 bg-black text-white font-mono text-sm flex flex-col`}>
+    <div className={`absolute ${isMaximized ? "inset-8 z-40" : "top-1/4 left-1/4 w-1/2 h-1/2 z-30"} rounded-lg shadow-2xl border overflow-hidden transition-all duration-300 bg-black text-white font-mono text-sm flex flex-col`}>
       <div className="flex items-center justify-between px-4 py-2 bg-gray-800 rounded-t-lg">
         <div className="flex items-center space-x-2">
           <button

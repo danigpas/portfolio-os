@@ -216,12 +216,13 @@ export function UbuntuDesktop({ children, onSectionChange, onReboot, onSuspend, 
           </div>
         </div>
 
-        <div className="flex items-center space-x-4 text-sm">
-          <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 mx-auto">
             <Palette className="w-3 h-3" />
             <span className="text-xs">Escoger tema</span>
             <ThemeSelector />
           </div>
+
+        <div className="flex items-center space-x-4 text-sm">
           <div className="flex items-center space-x-1">
             <Clock className="w-3 h-3" />
             <span>{currentTime.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" })}</span>
@@ -300,7 +301,7 @@ export function UbuntuDesktop({ children, onSectionChange, onReboot, onSuspend, 
 
       {/* Dock */}
       <div
-        className={`absolute bottom-4 left-1/2 transform -translate-x-1/2 backdrop-blur-sm rounded-2xl px-4 py-2 border ${getDockClasses()}`}
+        className={`absolute bottom-4 left-1/2 transform -translate-x-1/2 backdrop-blur-sm rounded-2xl px-4 py-2 border z-60 ${getDockClasses()}`}
       >
         <div className="flex items-center space-x-3">
           {allDockItems.map((item) => {

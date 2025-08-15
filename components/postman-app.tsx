@@ -480,7 +480,7 @@ export function PostmanApp({ onMinimize, onMaximize, onClose, initialSection = "
   return (
     <>
       <div
-        className={`absolute ${isMaximized ? "inset-8" : "top-16 left-1/2 transform -translate-x-1/2 w-[90%] max-w-6xl h-[90%]"} rounded-lg shadow-2xl border overflow-hidden transition-all duration-300 ${getWindowClasses()}`}
+        className={`absolute ${isMaximized ? "inset-8 z-40" : "top-16 left-1/2 transform -translate-x-1/2 w-[90%] max-w-6xl h-[90%] z-30"} rounded-lg shadow-2xl border overflow-hidden transition-all duration-300 ${getWindowClasses()}`}
       >
         {/* Window controls */}
         <div className={`border-b px-4 py-2 flex items-center justify-between ${getHeaderClasses()}`}>
@@ -559,7 +559,7 @@ export function PostmanApp({ onMinimize, onMaximize, onClose, initialSection = "
               <p className="text-sm opacity-75">Portfolio Backend API v3.0</p>
             </div>
 
-            <div className="flex-1 overflow-y-auto">
+            <div className="flex-1 overflow-y-auto pb-4">
               {endpoints.map((endpoint) => {
                 const Icon = endpoint.icon
                 const isActive = activeEndpoint === `${endpoint.method} ${endpoint.path}`
@@ -609,27 +609,27 @@ export function PostmanApp({ onMinimize, onMaximize, onClose, initialSection = "
                   </div>
                 )
               })}
-            </div>
 
-            <div className="p-4 border-t flex-shrink-0">
-              <button
-                className={`w-full px-4 py-2 rounded-lg flex items-center justify-center space-x-2 transition-all duration-200 hover:scale-105 ${
-                  theme === "matrix"
-                    ? "bg-green-600 hover:bg-green-500 text-black font-bold shadow-lg hover:shadow-green-500/25"
-                    : theme === "vscode"
-                      ? "bg-blue-600 hover:bg-blue-500 text-white font-bold shadow-lg hover:shadow-blue-500/25"
-                      : "bg-orange-500 hover:bg-orange-600 text-white font-bold shadow-lg hover:shadow-orange-500/25"
-                }`}
-                onClick={() => {
-                  const link = document.createElement("a")
-                  link.href = "/cv-daniel-gonzalez-pascual.pdf"
-                  link.download = "CV-Daniel-Gonzalez-Pascual.pdf"
-                  link.click()
-                }}
-              >
-                <Download className="w-4 h-4" />
-                <span>Descargar CV</span>
-              </button>
+              <div className="mt-4 px-3 py-2">
+                <button
+                  className={`w-full px-4 py-2 rounded-lg flex items-center justify-center space-x-2 transition-all duration-200 hover:scale-105 ${
+                    theme === "matrix"
+                      ? "bg-green-600 hover:bg-green-500 text-black font-bold shadow-lg hover:shadow-green-500/25"
+                      : theme === "vscode"
+                        ? "bg-blue-600 hover:bg-blue-500 text-white font-bold shadow-lg hover:shadow-blue-500/25"
+                        : "bg-orange-500 hover:bg-orange-600 text-white font-bold shadow-lg hover:shadow-orange-500/25"
+                  }`}
+                  onClick={() => {
+                    const link = document.createElement("a")
+                    link.href = "/cv-daniel-gonzalez-pascual.pdf"
+                    link.download = "CV-Daniel-Gonzalez-Pascual.pdf"
+                    link.click()
+                  }}
+                >
+                  <Download className="w-4 h-4" />
+                  <span>Descargar CV</span>
+                </button>
+              </div>
             </div>
           </div>
 

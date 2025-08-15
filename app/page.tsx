@@ -144,6 +144,7 @@ export default function Home() {
               onReboot={handleReboot}
               onSuspend={handleSuspend}
               onShutdown={handleShutdown}
+              onMinimize={() => setShowTerminal(false)}
             />
           )}
         </UbuntuDesktop>
