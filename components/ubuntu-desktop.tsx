@@ -55,7 +55,7 @@ export function UbuntuDesktop({ children, onSectionChange, onReboot, onSuspend, 
 
   const handleDownloadCV = () => {
     const link = document.createElement("a")
-    link.href = "/cv-daniel-gonzalez-pascual.pdf"
+    link.href = "/CV dani 2025 (optimizado para reclutadores).pdf"
     link.download = "CV-Daniel-Gonzalez-Pascual.pdf"
     link.click()
   }
