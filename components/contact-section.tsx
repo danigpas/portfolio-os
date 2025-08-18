@@ -29,7 +29,7 @@ export function ContactSection() {
                     </div>
                     <div>
                       <h3 className="font-heading font-semibold text-lg mb-1">Email</h3>
-                      <p className="text-muted-foreground">daniel@example.com</p>
+                      <p className="text-muted-foreground">danigpascual@protonmail.com</p>
                     </div>
                   </div>
                 </CardContent>
@@ -52,13 +52,13 @@ export function ContactSection() {
               {/* Social Links */}
               <div className="flex space-x-4">
                 <Button className="btn-outline flex-1" asChild>
-                  <a href="https://linkedin.com/in/danielgonzalezpascual" target="_blank" rel="noopener noreferrer">
+                  <a href="https://www.linkedin.com/in/daniel-gonz%C3%A1lez-pascual-dev/" target="_blank" rel="noopener noreferrer">
                     <Linkedin className="w-5 h-5 mr-2" />
                     LinkedIn
                   </a>
                 </Button>
                 <Button className="btn-outline flex-1" asChild>
-                  <a href="https://github.com/danielgonzalezpascual" target="_blank" rel="noopener noreferrer">
+                  <a href="https://github.com/danigpas" target="_blank" rel="noopener noreferrer">
                     <Github className="w-5 h-5 mr-2" />
                     GitHub
                   </a>
@@ -83,7 +83,7 @@ export function ContactSection() {
                 </div>
 
                 <Button className="btn-primary w-full" asChild>
-                  <a href="mailto:daniel@example.com">
+                  <a href="mailto:danigpascual@protonmail.com">
                     <Mail className="w-5 h-5 mr-2" />
                     {t("contact.email")}
                   </a>
