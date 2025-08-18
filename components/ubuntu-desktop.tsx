@@ -122,14 +122,14 @@ export function UbuntuDesktop({ children, onSectionChange, onReboot, onSuspend, 
       icon: Github,
       label: "GitHub",
       color: theme === "matrix" ? "bg-green-800" : theme === "vscode" ? "bg-gray-700" : "bg-gray-800",
-      action: () => handleExternalLink("https://github.com/danielgonzalezpascual"),
+      action: () => handleExternalLink("https://github.com/danigpas"),
     },
     {
       id: "linkedin",
       icon: Linkedin,
       label: "LinkedIn",
       color: theme === "matrix" ? "bg-green-700" : theme === "vscode" ? "bg-blue-700" : "bg-blue-600",
-      action: () => handleExternalLink("https://linkedin.com/in/daniel-gonzalez-pascual"),
+      action: () => handleExternalLink("https://www.linkedin.com/in/daniel-gonz%C3%A1lez-pascual-dev/"),
     },
   ]
 
