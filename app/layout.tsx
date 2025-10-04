@@ -32,13 +32,18 @@ export const metadata: Metadata = {
     "Portfolio interactivo de Daniel González Pascual, desarrollador backend Python. Experiencia única tipo Postman API.",
   generator: "v0.app",
   manifest: "/manifest.json",
-  themeColor: "#f97316",
-  viewport: "width=device-width, initial-scale=1, maximum-scale=1",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
     title: "Daniel Portfolio",
   },
+}
+
+export const viewport = {
+  themeColor: "#f97316",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
 }
 
 export default function RootLayout({
