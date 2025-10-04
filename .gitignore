@@ -25,3 +25,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Todos los ficheros del venv no lo necesitamos en nuestro repo
+*venv
+
+__pycache__
