@@ -6,8 +6,11 @@ import { UbuntuDesktop } from "@/components/ubuntu-desktop"
 import { PostmanApp } from "@/components/postman-app"
 import { PWAServiceWorker } from "@/components/pwa-service-worker"
 import { Terminal as TerminalComponent } from "@/components/terminal"
+import { useIsMobile } from "@/hooks/use-mobile"
+import AndroidLauncher from "@/components/mobile/AndroidLauncher"
 
 export default function Home() {
+  const isMobile = useIsMobile()
   const [bootComplete, setBootComplete] = useState(false)
   const [appLaunched, setAppLaunched] = useState(false)
   const [isMinimized, setIsMinimized] = useState(false)
@@ -45,6 +48,10 @@ export default function Home() {
   }
 
   useEffect(() => {
+    if (isMobile) {
+      setBootComplete(true) // No hay animación de arranque en móvil
+      return
+    }
     if (!bootComplete) {
       const bootTimer = setTimeout(() => {
         setBootComplete(true)
@@ -57,7 +64,7 @@ export default function Home() {
 
       return () => clearTimeout(bootTimer)
     }
-  }, [bootComplete])
+  }, [bootComplete, isMobile])
 
   const handleSectionChange = (section: string) => {
     setActiveSection(section)
@@ -96,6 +103,14 @@ export default function Home() {
   const handleOpenPostmanApp = () => {
     setShowTerminal(false) // Close Terminal
     setAppLaunched(true)
+  }
+
+  if (isMobile === undefined) {
+    return null // O un spinner de carga, para evitar un flash de contenido incorrecto
+  }
+
+  if (isMobile) {
+    return <AndroidLauncher />
   }
 
   return (
