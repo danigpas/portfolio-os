@@ -4,11 +4,11 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Building, Calendar } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
-import { getCvData } from "@/lib/cv-data"
+import { useCvData } from "@/components/portfolio-data-provider"
 
 export function ExperienceSection() {
-  const { t, language } = useLanguage()
-  const { experience } = getCvData(language)
+  const { t } = useLanguage()
+  const { experience } = useCvData()
 
   return (
     <section id="experience" className="py-20 bg-gradient-to-br from-accent/5 via-secondary/10 to-background">

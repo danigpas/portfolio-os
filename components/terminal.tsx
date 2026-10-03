@@ -1,9 +1,8 @@
 "use client"
 
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useTheme } from "@/components/theme-system"
-import { useLanguage } from "@/components/language-provider"
-import { getCvData } from "@/lib/cv-data"
+import { useCvData } from "@/components/portfolio-data-provider"
 import { APP_NAMES, THEME_NAMES } from "@/lib/omarchy-config"
 
 export interface TerminalProps {
@@ -32,9 +31,8 @@ export function Terminal({
   onSuspend,
   onShutdown,
 }: TerminalProps) {
-  const { language } = useLanguage()
   const { theme } = useTheme()
-  const cv = useMemo(() => getCvData(language), [language])
+  const cv = useCvData()
 
   const [input, setInput] = useState("")
   const [entries, setEntries] = useState<TerminalEntry[]>([])

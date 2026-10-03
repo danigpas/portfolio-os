@@ -3,13 +3,13 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { MapPin, Code, Database, Server } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
-import { getCvData } from "@/lib/cv-data"
+import { useCvData } from "@/components/portfolio-data-provider"
 
 const SKILL_ICONS = [Code, Database, Server]
 
 export function AboutSection() {
-  const { t, language } = useLanguage()
-  const { about, skills, contact } = getCvData(language)
+  const { t } = useLanguage()
+  const { about, skills, contact } = useCvData()
   const years = about.yearsOfExperience.replace(/[^0-9+]/g, "")
 
   return (

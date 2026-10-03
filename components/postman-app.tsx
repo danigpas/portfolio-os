@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useCallback, useEffect, useState } from "react"
 import {
   Play,
   User,
@@ -19,9 +19,14 @@ import {
   BarChart3,
   Calendar,
   Smartphone,
+  Wifi,
+  WifiOff,
+  RefreshCw,
 } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
-import { getCvData } from "@/lib/cv-data"
+import { usePortfolioData } from "@/components/portfolio-data-provider"
+import { API_URL, downloadCv, fetchEndpointData, type EndpointResult } from "@/lib/api"
+import type { CVData, Language } from "@/lib/cv-data"
 import { AboutSection } from "@/components/about-section"
 import { ExperienceSection } from "@/components/experience-section"
 import { EducationSection } from "@/components/education-section"
@@ -35,7 +40,7 @@ import { AnalyticsDashboard } from "@/components/analytics-dashboard"
 import { AvailabilityCalendar } from "@/components/availability-calendar"
 import { PWAFeatures } from "@/components/pwa-installer"
 import { PresentationMode } from "@/components/presentation-mode"
-import { LoadingOverlay } from "@/components/loading-states"
+import { SkeletonList } from "@/components/loading-states"
 import { ApiMetrics } from "@/components/api-metrics"
 import { DeveloperMode } from "@/components/developer-mode"
 
@@ -45,12 +50,14 @@ interface PostmanAppProps {
 
 export function PostmanApp({ initialSection = "GET /about" }: PostmanAppProps) {
   const { language } = useLanguage()
+  const { cv, backendOnline, error: apiError, loading: dataLoading, refresh } = usePortfolioData()
   const [activeEndpoint, setActiveEndpoint] = useState(initialSection)
   const [showPreview, setShowPreview] = useState(false)
   const [showMetrics, setShowMetrics] = useState(false)
   const [showDeveloperMode, setShowDeveloperMode] = useState(false)
   const [showPresentationMode, setShowPresentationMode] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [endpointResult, setEndpointResult] = useState<EndpointResult | null>(null)
 
   useEffect(() => {
     if (initialSection) {
@@ -75,14 +82,12 @@ export function PostmanApp({ initialSection = "GET /about" }: PostmanAppProps) {
   ]
 
   const handleEndpointClick = (endpoint: string) => {
-    setIsLoading(true)
     setActiveEndpoint(endpoint)
     setShowPreview(false)
+  }
 
-    // Simulate API loading
-    setTimeout(() => {
-      setIsLoading(false)
-    }, 800)
+  const handleDownloadCv = () => {
+    void downloadCv(cv.contact.cvPath)
   }
 
   const renderPreviewComponent = () => {
@@ -108,8 +113,7 @@ export function PostmanApp({ initialSection = "GET /about" }: PostmanAppProps) {
     )
   }
 
-  const getEndpointData = (endpoint: string) => {
-    const cv = getCvData(language)
+  const buildFallback = useCallback((endpoint: string, cv: CVData, language: Language): EndpointResult => {
     const endpointData = {
       "GET /about": {
         status: 200,
@@ -367,10 +371,38 @@ export function PostmanApp({ initialSection = "GET /about" }: PostmanAppProps) {
       },
     }
 
-    return endpointData[endpoint as keyof typeof endpointData] || { status: 404, data: { error: "Endpoint not found" } }
-  }
+    const entry = endpointData[endpoint as keyof typeof endpointData]
+    return {
+      path: endpoint.split(" ")[1] ?? endpoint,
+      status: entry?.status ?? 404,
+      responseTime: entry?.responseTime ?? "local",
+      data: entry?.data ?? { error: "Endpoint not found" },
+      source: "local",
+    }
+  }, [])
 
-  const currentData = getEndpointData(activeEndpoint)
+  // Consulta la API real de cada endpoint GET; si falla, cae al dato local.
+  useEffect(() => {
+    let cancelled = false
+    const path = activeEndpoint.split(" ")[1] ?? activeEndpoint
+    const fallback = buildFallback(activeEndpoint, cv, language).data
+    setIsLoading(true)
+    fetchEndpointData(path, language, fallback)
+      .then((result) => {
+        if (cancelled) return
+        setEndpointResult(result)
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoading(false)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [activeEndpoint, buildFallback, cv, language])
+
+  const activePath = activeEndpoint.split(" ")[1] ?? activeEndpoint
+  const currentData =
+    endpointResult && endpointResult.path === activePath ? endpointResult : buildFallback(activeEndpoint, cv, language)
 
   const getWindowClasses = () => "om-window"
   const getHeaderClasses = () => "om-panel border-b"
@@ -459,12 +491,7 @@ export function PostmanApp({ initialSection = "GET /about" }: PostmanAppProps) {
               <div className="mt-4 px-3 py-2">
                 <button
                   className="om-accent-bg flex w-full items-center justify-center gap-2 border border-[var(--omarchy-accent)] px-4 py-2 font-bold transition-opacity hover:opacity-90"
-                  onClick={() => {
-                    const link = document.createElement("a")
-                    link.href = "/cv-daniel-gonzalez-pascual.pdf"
-                    link.download = "CV-Daniel-Gonzalez-Pascual.pdf"
-                    link.click()
-                  }}
+                  onClick={handleDownloadCv}
                 >
                   <Download className="h-4 w-4" />
                   <span>Descargar CV</span>
@@ -483,11 +510,16 @@ export function PostmanApp({ initialSection = "GET /about" }: PostmanAppProps) {
                 </select>
                 <input
                   type="text"
-                  value={`https://daniel-portfolio-api.com${activeEndpoint.split(" ")[1]}`}
+                  value={`${API_URL}${activePath}`}
                   readOnly
+                  aria-label="URL del endpoint"
                   className="flex-1 border border-[var(--omarchy-border)] bg-[var(--omarchy-bg-alt)] px-3 py-2 text-[var(--omarchy-fg)]"
                 />
-                <button className="om-accent-bg flex items-center justify-center gap-2 border border-[var(--omarchy-accent)] px-6 py-2 transition-opacity hover:opacity-90">
+                <button
+                  className="om-accent-bg flex items-center justify-center gap-2 border border-[var(--omarchy-accent)] px-6 py-2 transition-opacity hover:opacity-90"
+                  onClick={refresh}
+                  title="Volver a consultar la API"
+                >
                   <Play className="h-4 w-4" />
                   <span>Send</span>
                 </button>
@@ -504,47 +536,78 @@ export function PostmanApp({ initialSection = "GET /about" }: PostmanAppProps) {
                   💡 Haz clic en "Preview" para ver la sección del portfolio renderizada
                 </div>
               )}
+              {apiError || backendOnline === false ? (
+                <div
+                  role="status"
+                  className="mt-2 flex items-center gap-2 border border-[var(--omarchy-warning)]/40 bg-[var(--omarchy-warning)]/10 p-2 text-xs text-[var(--omarchy-warning)]"
+                >
+                  <WifiOff className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                  <span>
+                    API no disponible{apiError ? ` (${apiError})` : ""}. Mostrando datos locales.
+                  </span>
+                  <button type="button" onClick={refresh} className="ml-auto flex items-center gap-1 underline">
+                    <RefreshCw className="h-3 w-3" aria-hidden="true" />
+                    Reintentar
+                  </button>
+                </div>
+              ) : null}
             </div>
 
             <div className="flex flex-1 overflow-hidden">
               {/* Response/Preview */}
               <div className="om-scrollbar flex-1 overflow-y-auto">
-                <LoadingOverlay isLoading={isLoading}>
-                  {showPreview ? (
-                    <div className="h-full bg-[var(--omarchy-bg)]">
-                      <div className="border-b border-[var(--omarchy-border)] bg-[var(--omarchy-surface)] p-4">
-                        <h3 className="font-semibold">Vista Previa - {activeEndpoint}</h3>
-                        <p className="om-muted-text text-sm">Renderizado del componente del portfolio</p>
-                      </div>
-                      <div className="p-4">{renderPreviewComponent()}</div>
+                {isLoading || dataLoading ? (
+                  <div className="p-6">
+                    <p className="om-muted-text mb-4 flex items-center gap-2 text-xs uppercase tracking-widest">
+                      <Wifi className="h-3.5 w-3.5" aria-hidden="true" />
+                      Consultando {API_URL}…
+                    </p>
+                    <SkeletonList items={4} />
+                  </div>
+                ) : showPreview ? (
+                  <div className="h-full bg-[var(--omarchy-bg)]">
+                    <div className="border-b border-[var(--omarchy-border)] bg-[var(--omarchy-surface)] p-4">
+                      <h3 className="font-semibold">Vista Previa - {activeEndpoint}</h3>
+                      <p className="om-muted-text text-sm">Renderizado del componente del portfolio</p>
                     </div>
-                  ) : (
-                    // Respuesta JSON original
-                    <div className="p-4">
-                      <div className="mb-4 flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                          <span className="om-muted-text text-sm">Status:</span>
-                          <span
-                            className={`border px-2 py-1 text-sm font-medium ${
-                              currentData.status === 200
-                                ? "border-[var(--omarchy-success)]/40 bg-[var(--omarchy-success)]/15 text-[var(--omarchy-success)]"
-                                : "border-[var(--omarchy-danger)]/40 bg-[var(--omarchy-danger)]/15 text-[var(--omarchy-danger)]"
-                            }`}
-                          >
-                            {currentData.status} {currentData.status === 200 ? "OK" : "Error"}
-                          </span>
-                          <span className="om-muted-text text-sm">Time: {currentData.responseTime}</span>
-                        </div>
+                    <div className="p-4">{renderPreviewComponent()}</div>
+                  </div>
+                ) : (
+                  // Respuesta JSON original
+                  <div className="p-4">
+                    <div className="mb-4 flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <span className="om-muted-text text-sm">Status:</span>
+                        <span
+                          className={`border px-2 py-1 text-sm font-medium ${
+                            currentData.status === 200
+                              ? "border-[var(--omarchy-success)]/40 bg-[var(--omarchy-success)]/15 text-[var(--omarchy-success)]"
+                              : "border-[var(--omarchy-danger)]/40 bg-[var(--omarchy-danger)]/15 text-[var(--omarchy-danger)]"
+                          }`}
+                        >
+                          {currentData.status} {currentData.status === 200 ? "OK" : "Error"}
+                        </span>
+                        <span
+                          className={`border px-2 py-1 text-xs font-bold uppercase tracking-widest ${
+                            currentData.source === "api"
+                              ? "border-[var(--omarchy-success)]/40 text-[var(--omarchy-success)]"
+                              : "border-[var(--omarchy-muted)]/40 text-[var(--omarchy-muted)]"
+                          }`}
+                          title={currentData.source === "api" ? `Respuesta real de ${API_URL}` : "Datos locales (fallback)"}
+                        >
+                          {currentData.source === "api" ? "API" : "LOCAL"}
+                        </span>
+                        <span className="om-muted-text text-sm">Time: {currentData.responseTime}</span>
                       </div>
+                    </div>
 
-                      <div className="overflow-x-auto border border-[var(--omarchy-border)] bg-[var(--omarchy-bg-alt)] p-4">
-                        <pre className="whitespace-pre-wrap font-mono text-sm text-[var(--omarchy-success)]">
-                          {JSON.stringify(currentData.data, null, 2)}
-                        </pre>
-                      </div>
+                    <div className="overflow-x-auto border border-[var(--omarchy-border)] bg-[var(--omarchy-bg-alt)] p-4">
+                      <pre className="whitespace-pre-wrap font-mono text-sm text-[var(--omarchy-success)]">
+                        {JSON.stringify(currentData.data, null, 2)}
+                      </pre>
                     </div>
-                  )}
-                </LoadingOverlay>
+                  </div>
+                )}
               </div>
 
               {/* Metrics Panel */}
