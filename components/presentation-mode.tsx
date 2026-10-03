@@ -135,8 +135,8 @@ export function PresentationMode({ isOpen, onClose }: PresentationModeProps) {
             <div className="space-y-2">
               <p>📧 danigpascual@protonmail.com</p>
               <p>📱 +34 XXX XXX XXX</p>
-              <p>🌐 LinkedIn: danielgonzalezpascual</p>
-              <p>💻 GitHub: danielgonzalezpascual</p>
+              <p>🌐 LinkedIn: daniel-gonzález-pascual-dev</p>
+              <p>💻 GitHub: danigpas</p>
             </div>
           </div>
         </div>
