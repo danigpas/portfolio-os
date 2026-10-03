@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Presentation, ChevronLeft, ChevronRight, X } from "lucide-react"
-import { useTheme } from "@/components/theme-system"
 
 interface PresentationModeProps {
   isOpen: boolean
@@ -14,7 +13,6 @@ interface PresentationModeProps {
 
 export function PresentationMode({ isOpen, onClose }: PresentationModeProps) {
   const [currentSlide, setCurrentSlide] = useState(0)
-  const { theme } = useTheme()
 
   const slides = [
     {
@@ -171,15 +169,7 @@ export function PresentationMode({ isOpen, onClose }: PresentationModeProps) {
 
   return (
     <div className="fixed inset-0 z-50 bg-black">
-      <div
-        className={`h-full flex flex-col ${
-          theme === "ubuntu"
-            ? "bg-gradient-to-br from-purple-900 to-orange-600"
-            : theme === "vscode"
-              ? "bg-gray-900"
-              : "bg-black"
-        }`}
-      >
+      <div className="flex h-full flex-col bg-[var(--omarchy-bg)]">
         {/* Header */}
         <div className="flex justify-between items-center p-6 text-white">
           <div className="flex items-center gap-4">

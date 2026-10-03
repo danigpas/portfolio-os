@@ -3,7 +3,6 @@
 import type React from "react"
 
 import { useState } from "react"
-import { useTheme } from "@/components/theme-system"
 
 interface LoadingStateProps {
   type?: "skeleton" | "spinner" | "pulse" | "wave" | "dots"
@@ -13,18 +12,7 @@ interface LoadingStateProps {
 }
 
 export function LoadingState({ type = "skeleton", size = "md", text, className = "" }: LoadingStateProps) {
-  const { theme } = useTheme()
-
-  const getThemeClasses = () => {
-    switch (theme) {
-      case "matrix":
-        return "text-green-400 border-green-500"
-      case "vscode":
-        return "text-blue-400 border-blue-500"
-      default:
-        return "text-orange-500 border-orange-500"
-    }
-  }
+  const getThemeClasses = () => "text-[var(--omarchy-accent)] border-[var(--omarchy-border)]"
 
   const getSizeClasses = () => {
     switch (size) {
@@ -152,18 +140,7 @@ interface ProgressiveLoadingProps {
 }
 
 export function ProgressiveLoading({ steps, currentStep, className = "" }: ProgressiveLoadingProps) {
-  const { theme } = useTheme()
-
-  const getThemeClasses = () => {
-    switch (theme) {
-      case "matrix":
-        return "text-green-400 bg-green-500"
-      case "vscode":
-        return "text-blue-400 bg-blue-500"
-      default:
-        return "text-orange-500 bg-orange-500"
-    }
-  }
+  const getThemeClasses = () => "text-[var(--omarchy-accent)] bg-[var(--omarchy-accent)]"
 
   return (
     <div className={`space-y-4 ${className}`}>

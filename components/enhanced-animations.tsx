@@ -3,7 +3,6 @@
 import type React from "react"
 
 import { useEffect, useState } from "react"
-import { useTheme } from "@/components/theme-system"
 
 export function TypewriterText({
   text,
@@ -116,18 +115,7 @@ export function ProgressBar({
   className?: string
   animated?: boolean
 }) {
-  const { theme } = useTheme()
-
-  const getProgressColor = () => {
-    switch (theme) {
-      case "matrix":
-        return "bg-green-500"
-      case "vscode":
-        return "bg-blue-500"
-      default:
-        return "bg-orange-500"
-    }
-  }
+  const getProgressColor = () => "bg-[var(--omarchy-accent)]"
 
   return (
     <div className={`w-full bg-gray-200 rounded-full h-2 overflow-hidden ${className}`}>

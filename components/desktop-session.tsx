@@ -81,17 +81,23 @@ export function DesktopSession() {
   return (
     <>
       {showShutdownConfirmation && (
-        <div className="fixed inset-0 bg-black/50 z-[100] flex items-center justify-center">
-          <div className="bg-white text-black p-8 rounded-lg shadow-lg text-center">
-            <h2 className="text-2xl font-bold mb-4">Apagar</h2>
-            <p className="mb-4">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70">
+          <div className="om-window w-full max-w-md border p-8 text-center">
+            <h2 className="mb-4 text-2xl font-bold om-accent-text">Apagar</h2>
+            <p className="mb-6 text-sm text-[var(--omarchy-fg)]">
               En este caso tras apagarse se volverá a iniciar el sistema operativo de forma automática.
             </p>
-            <div className="flex justify-center space-x-4">
-              <button onClick={confirmShutdown} className="bg-red-500 text-white px-4 py-2 rounded">
+            <div className="flex justify-center gap-3">
+              <button
+                onClick={confirmShutdown}
+                className="border border-[var(--omarchy-danger)] bg-[var(--omarchy-danger)] px-4 py-2 text-sm text-[var(--omarchy-bg)] hover:opacity-90"
+              >
                 Apagar
               </button>
-              <button onClick={cancelShutdown} className="bg-gray-300 px-4 py-2 rounded">
+              <button
+                onClick={cancelShutdown}
+                className="border border-[var(--omarchy-border)] bg-[var(--omarchy-surface)] px-4 py-2 text-sm text-[var(--omarchy-fg)] hover:bg-[var(--omarchy-surface-alt)]"
+              >
                 Cancelar
               </button>
             </div>
@@ -104,7 +110,7 @@ export function DesktopSession() {
           role="button"
           tabIndex={0}
           aria-label="Desbloquear el equipo"
-          className="fixed inset-0 bg-black z-[100] flex flex-col items-center justify-center text-white font-mono cursor-pointer"
+          className="fixed inset-0 z-[100] flex cursor-pointer flex-col items-center justify-center bg-[var(--omarchy-bg)] font-mono text-[var(--omarchy-fg)]"
           onClick={handleResume}
           onKeyDown={(event) => {
             if (event.key === "Enter" || event.key === " ") {
@@ -117,15 +123,16 @@ export function DesktopSession() {
           <img
             src="/daniel-gonzalez-pascual-portrait.png"
             alt="Daniel González Pascual"
-            className="w-40 h-40 rounded-full mb-4"
+            className="mb-4 h-40 w-40 border border-[var(--omarchy-border)] object-cover"
           />
-          <h2 className="text-2xl font-bold">Daniel González Pascual</h2>
+          <h2 className="text-2xl font-bold om-accent-text">Daniel González Pascual</h2>
           <p className="text-lg">Desarrollador Backend Python</p>
-          <p className="mt-8">Haz click o pulsa Enter para desbloquear el equipo o la pantalla.</p>
+          <p className="mt-8 text-[var(--omarchy-muted)]">Haz click o pulsa Enter para desbloquear el equipo o la pantalla.</p>
         </div>
       )}
 
       <UbuntuDesktop
+        activeSection={activeSection}
         onSectionChange={handleSectionChange}
         onReboot={handleReboot}
         onSuspend={handleSuspend}
