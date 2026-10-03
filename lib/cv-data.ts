@@ -35,6 +35,8 @@ export interface EducationItem {
   /** Estado opcional ("En curso", "Completado", ...). */
   status?: string
   description: string
+  /** Etiquetas/skills mostradas como badges en el escritorio. */
+  tags?: string[]
 }
 
 export interface ProjectItem {
@@ -42,8 +44,18 @@ export interface ProjectItem {
   name: string
   description: string
   stack: string[]
+  /** URL pública del proyecto (demo/landing). Sólo si es real. */
   url?: string
+  /** URL pública del repositorio. Sólo si es real. */
   repo?: string
+  /** Imagen pública para la tarjeta del escritorio. */
+  image?: string
+  /** Marca el proyecto como destacado en el escritorio. */
+  featured?: boolean
+  /** Tipo legible ("Blog personal", "Portfolio personal", ...). */
+  type?: string
+  /** Estado legible ("Activo", "Completado", ...). */
+  status?: string
 }
 
 export interface SkillGroup {
@@ -180,6 +192,7 @@ export const cvData: Record<Language, CVData> = {
         status: "En curso",
         description:
           "Cursando actualmente el Grado Superior en Desarrollo de Aplicaciones Web para ampliar conocimientos en tecnologías frontend y fullstack.",
+        tags: [],
       },
       {
         id: "cesur",
@@ -190,6 +203,7 @@ export const cvData: Record<Language, CVData> = {
         status: "Completado",
         description:
           "Especialización en desarrollo de aplicaciones con enfoque en programación orientada a objetos y gestión de bases de datos.",
+        tags: ["HTML", "GitHub", "Visual Studio", "C#", "Documentación", "MySQL", ".NET Framework"],
       },
       {
         id: "uma",
@@ -200,6 +214,7 @@ export const cvData: Record<Language, CVData> = {
         status: "Completado",
         description:
           "Formación en fundamentos de programación, estructuras de datos, algoritmos y desarrollo de software.",
+        tags: ["Documentación", "Habilidades sociales", "Resolución de problemas"],
       },
       {
         id: "uimp",
@@ -209,6 +224,7 @@ export const cvData: Record<Language, CVData> = {
         period: "Jul 2019",
         status: "Completado",
         description: "Curso intensivo de inglés en entorno académico.",
+        tags: ["Habilidades sociales", "B1"],
       },
     ],
     projects: [
@@ -218,20 +234,33 @@ export const cvData: Record<Language, CVData> = {
         description:
           "Este portfolio: landing SSR con SEO y un escritorio tipo Omarchy navegable, construido con Next.js 15, React 19 y Tailwind v4.",
         stack: ["Next.js", "React", "TypeScript", "Tailwind CSS"],
+        url: "https://danigpascual.dev",
         repo: "https://github.com/danielgonzalezpascual",
+        image: "/modern-blog-interface.png",
+        featured: true,
+        type: "Portfolio personal",
+        status: "Activo",
       },
       {
         id: "el-nieto-de-pascual",
         name: "El Nieto de Pascual",
         description: "Blog personal donde comparto conocimientos sobre desarrollo backend y tecnologías Python.",
         stack: ["Python", "Markdown", "Web"],
-        url: "https://github.com/danielgonzalezpascual",
+        url: "https://elnietodepascual.com",
+        image: "/python-backend-blog.png",
+        featured: true,
+        type: "Blog personal",
+        status: "Activo",
       },
       {
         id: "portfolio-retro-nes",
         name: "Portfolio Retro NES",
         description: "Portfolio con estética retro inspirada en la consola NES, desarrollado con tecnologías web modernas.",
         stack: ["HTML", "CSS", "JavaScript"],
+        image: "/retro-nes-portfolio.png",
+        featured: false,
+        type: "Portfolio personal",
+        status: "Completado",
       },
     ],
     skills: [
@@ -335,6 +364,7 @@ export const cvData: Record<Language, CVData> = {
         status: "In progress",
         description:
           "Currently studying the Higher Degree in Web Application Development to expand my knowledge in frontend and fullstack technologies.",
+        tags: [],
       },
       {
         id: "cesur",
@@ -345,6 +375,7 @@ export const cvData: Record<Language, CVData> = {
         status: "Completed",
         description:
           "Specialization in application development focused on object-oriented programming and database management.",
+        tags: ["HTML", "GitHub", "Visual Studio", "C#", "Documentation", "MySQL", ".NET Framework"],
       },
       {
         id: "uma",
@@ -354,6 +385,7 @@ export const cvData: Record<Language, CVData> = {
         period: "Sept 2017 - Sept 2021",
         status: "Completed",
         description: "Solid foundation in programming fundamentals, data structures, algorithms and software development.",
+        tags: ["Documentation", "Social skills", "Problem solving"],
       },
       {
         id: "uimp",
@@ -363,6 +395,7 @@ export const cvData: Record<Language, CVData> = {
         period: "Jul 2019",
         status: "Completed",
         description: "Intensive English course in an academic environment.",
+        tags: ["Social skills", "B1"],
       },
     ],
     projects: [
@@ -372,20 +405,33 @@ export const cvData: Record<Language, CVData> = {
         description:
           "This portfolio: an SSR landing with SEO and a navigable Omarchy-style desktop, built with Next.js 15, React 19 and Tailwind v4.",
         stack: ["Next.js", "React", "TypeScript", "Tailwind CSS"],
+        url: "https://danigpascual.dev",
         repo: "https://github.com/danielgonzalezpascual",
+        image: "/modern-blog-interface.png",
+        featured: true,
+        type: "Personal portfolio",
+        status: "Active",
       },
       {
         id: "el-nieto-de-pascual",
         name: "El Nieto de Pascual",
         description: "Personal blog where I share knowledge about backend development and Python technologies.",
         stack: ["Python", "Markdown", "Web"],
-        url: "https://github.com/danielgonzalezpascual",
+        url: "https://elnietodepascual.com",
+        image: "/python-backend-blog.png",
+        featured: true,
+        type: "Personal blog",
+        status: "Active",
       },
       {
         id: "portfolio-retro-nes",
         name: "Retro NES Portfolio",
         description: "Portfolio with a retro aesthetic inspired by the NES console, built with modern web technologies.",
         stack: ["HTML", "CSS", "JavaScript"],
+        image: "/retro-nes-portfolio.png",
+        featured: false,
+        type: "Personal portfolio",
+        status: "Completed",
       },
     ],
     skills: [

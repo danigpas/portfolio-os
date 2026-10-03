@@ -24,7 +24,17 @@ export const OMARCHY_THEMES: ThemeDefinition[] = [
 
 const STORAGE_KEY = "omarchy-theme"
 const LEGACY_STORAGE_KEY = "portfolio-theme"
-const THEME_IDS = OMARCHY_THEMES.map((theme) => theme.id)
+
+/**
+ * Lista única de temas válidos. Cualquier superficie que necesite validar o
+ * listar temas (rofi, terminal, omarchy-config) debe derivar de aquí.
+ */
+export const THEME_IDS: readonly string[] = OMARCHY_THEMES.map((theme) => theme.id)
+
+/** Type guard para validar nombres de tema sin recurrir a casts. */
+export function isOmarchyTheme(value: string): value is OmarchyTheme {
+  return THEME_IDS.includes(value)
+}
 
 interface ThemeContextType {
   theme: OmarchyTheme
@@ -59,8 +69,8 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
 
   useEffect(() => {
     const saved = window.localStorage.getItem(STORAGE_KEY)
-    if (saved && THEME_IDS.includes(saved as OmarchyTheme)) {
-      setTheme(saved as OmarchyTheme)
+    if (saved && isOmarchyTheme(saved)) {
+      setTheme(saved)
       return
     }
     const legacy = migrateLegacyTheme(window.localStorage.getItem(LEGACY_STORAGE_KEY))

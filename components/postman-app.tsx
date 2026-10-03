@@ -2,9 +2,6 @@
 
 import { useState, useEffect } from "react"
 import {
-  X,
-  Minimize2,
-  Maximize2,
   Play,
   User,
   Briefcase,
@@ -43,16 +40,12 @@ import { ApiMetrics } from "@/components/api-metrics"
 import { DeveloperMode } from "@/components/developer-mode"
 
 interface PostmanAppProps {
-  onMinimize?: () => void
-  onMaximize?: () => void
-  onClose?: () => void
   initialSection?: string
 }
 
-export function PostmanApp({ onMinimize, onMaximize, onClose, initialSection = "GET /about" }: PostmanAppProps) {
+export function PostmanApp({ initialSection = "GET /about" }: PostmanAppProps) {
   const { language } = useLanguage()
   const [activeEndpoint, setActiveEndpoint] = useState(initialSection)
-  const [isMaximized, setIsMaximized] = useState(false)
   const [showPreview, setShowPreview] = useState(false)
   const [showMetrics, setShowMetrics] = useState(false)
   const [showDeveloperMode, setShowDeveloperMode] = useState(false)
@@ -379,19 +372,6 @@ export function PostmanApp({ onMinimize, onMaximize, onClose, initialSection = "
 
   const currentData = getEndpointData(activeEndpoint)
 
-  const handleMinimize = () => {
-    if (onMinimize) onMinimize()
-  }
-
-  const handleMaximize = () => {
-    setIsMaximized(!isMaximized)
-    if (onMaximize) onMaximize()
-  }
-
-  const handleClose = () => {
-    if (onClose) onClose()
-  }
-
   const getWindowClasses = () => "om-window"
   const getHeaderClasses = () => "om-panel border-b"
   const getSidebarClasses = () => "om-inset border-r"
@@ -399,30 +379,11 @@ export function PostmanApp({ onMinimize, onMaximize, onClose, initialSection = "
   return (
     <>
       <div
-        className={`absolute ${isMaximized ? "inset-8 z-40" : "top-16 left-1/2 w-[90%] max-w-6xl -translate-x-1/2 h-[90%] z-30"} flex flex-col overflow-hidden border font-mono text-sm shadow-2xl transition-all duration-300 ${getWindowClasses()}`}
+        className={`flex h-full min-h-0 flex-col overflow-hidden border font-mono text-sm ${getWindowClasses()}`}
       >
-        {/* Window controls */}
+        {/* Toolbar omarchy (los controles de ventana los aporta el window manager) */}
         <div className={`flex items-center justify-between border-b px-4 py-2 ${getHeaderClasses()}`}>
-          <div className="flex items-center gap-2">
-            <div className="flex gap-2">
-              <button
-                aria-label="Cerrar"
-                className="h-3 w-3 rounded-none border border-[var(--omarchy-border)] bg-[var(--omarchy-danger)] transition-opacity hover:opacity-80"
-                onClick={handleClose}
-              ></button>
-              <button
-                aria-label="Minimizar"
-                className="h-3 w-3 rounded-none border border-[var(--omarchy-border)] bg-[var(--omarchy-warning)] transition-opacity hover:opacity-80"
-                onClick={handleMinimize}
-              ></button>
-              <button
-                aria-label="Maximizar"
-                className="h-3 w-3 rounded-none border border-[var(--omarchy-border)] bg-[var(--omarchy-success)] transition-opacity hover:opacity-80"
-                onClick={handleMaximize}
-              ></button>
-            </div>
-            <span className="ml-4 font-medium">OMARCHY_API · daniel@portfolio</span>
-          </div>
+          <span className="font-medium">OMARCHY_API · daniel@portfolio</span>
 
           <div className="flex items-center gap-1">
             <button
@@ -448,27 +409,6 @@ export function PostmanApp({ onMinimize, onMaximize, onClose, initialSection = "
               onClick={() => setShowDeveloperMode(!showDeveloperMode)}
             >
               <Code className="h-4 w-4" />
-            </button>
-            <button
-              aria-label="Minimizar"
-              className="p-1 transition-colors hover:bg-[var(--omarchy-surface-alt)]"
-              onClick={handleMinimize}
-            >
-              <Minimize2 className="h-4 w-4" />
-            </button>
-            <button
-              aria-label="Maximizar"
-              className="p-1 transition-colors hover:bg-[var(--omarchy-surface-alt)]"
-              onClick={handleMaximize}
-            >
-              <Maximize2 className="h-4 w-4" />
-            </button>
-            <button
-              aria-label="Cerrar"
-              className="p-1 transition-colors hover:bg-[var(--omarchy-surface-alt)]"
-              onClick={handleClose}
-            >
-              <X className="h-4 w-4" />
             </button>
           </div>
         </div>
