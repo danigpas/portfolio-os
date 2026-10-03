@@ -51,3 +51,17 @@ Eres el **coordinador** del harness Portfolio OS (Run `run_7739df1b79d3` en Orca
 ## Estado (se actualiza al avanzar)
 
 Ver harness/plan.md para el estado de tickets. Última actualización: creación del harness.
+
+## Ejecución finalizada (2026-10-03)
+
+| Ticket | Tarea | Builder | Review | PR |
+|---|---|---|---|---|
+| DAN-88 | T0 hotfixes | orquestador | auto (build) | #4? no: #2 |
+| DAN-90 | T1 backend FastAPI | deepseek ✅ | mimo APPROVED (pytest 30) | #4 |
+| DAN-91 | T2 fundación frontend | deepseek ✅ | CHANGES→fix→APPROVED | #5 |
+| DAN-92 | T3 temas/boot/waybar | deepseek ✅ | CHANGES→fix→APPROVED | #6 |
+| DAN-93 | T4 WM/rofi/a11y | deepseek ✅ | CHANGES→fix+rebase→APPROVED | #7 |
+| DAN-94 | T5 integración | deepseek ✅ | mimo APPROVED (smoke 13/13) | #8 |
+
+Incidentes documentados: 2 reviewers r1 terminaron turno sin worker_done (recuperados con re-dispatch); sondeo accidental creó un worker "probe" (detenido y liberado); un task placeholder quedó bloqueado; flag --model no soportado por pi (resuelto alternando defaultModel en settings.json con backup/restore).
+Pendiente del usuario: aprobar y mergear PRs #2–#8 en orden #4→#5→#6→#7→#8 (y #2/#3 cuando quiera), luego develop→release→main.
