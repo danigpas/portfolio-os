@@ -334,7 +334,7 @@ INSERT INTO experiences (
     'DisOfic',
     'Desarrollador Backend',
     '2023-09-01',
-    NULL,
+    '2026-03-01',
     'Jornada completa',
     'Desarrollo de API de integración en tiempo real con FastAPI...',
     'Python,FastAPI,MySQL,PostgreSQL,Redis,Celery,RabbitMQ',

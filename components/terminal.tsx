@@ -41,7 +41,7 @@ Escribe 'help' para ver comandos disponibles`,
     }
   }, [])
 
-  const commands = {
+  const commands: Record<string, () => string> = {
     help: () => `Comandos disponibles:
 • about - Información personal
 • skills - Habilidades técnicas

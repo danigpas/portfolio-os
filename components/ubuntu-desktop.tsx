@@ -310,7 +310,7 @@ export function UbuntuDesktop({ children, onSectionChange, onReboot, onSuspend, 
               <div
                 key={item.id}
                 className={`w-10 h-10 ${item.color} rounded-lg flex items-center justify-center cursor-pointer hover:scale-110 transition-transform group relative`}
-                onClick={() => (item.action ? item.action() : handleSectionClick(item.endpoint))}
+                onClick={() => handleSectionClick(item.endpoint)}
                 title={item.label}
               >
                 <Icon className="w-5 h-5 text-white" />

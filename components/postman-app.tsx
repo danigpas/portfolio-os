@@ -229,9 +229,22 @@ export function PostmanApp({ onMinimize, onMaximize, onClose, initialSection = "
         responseTime: "38ms",
         data: [
           {
+            company: "Inforyde",
+            position: "Desarrollador Python Semi-Senior",
+            duration: "Mar 2026 - Actualidad (Madrid)",
+            type: "Jornada completa",
+            description:
+              "Desarrollo de aplicaciones y servicios backend en Python en Inforyde, consultora especializada en el mercado eléctrico ubicada en Madrid. Participación en el análisis, desarrollo y mantenimiento de soluciones para clientes del sector energético.",
+            technologies: ["Python", "FastAPI", "SQL", "Git"],
+            achievements: [
+              "Desarrollo de software para el sector del mercado eléctrico",
+              "Trabajo en equipos multidisciplinares con buenas prácticas de desarrollo",
+            ],
+          },
+          {
             company: "DisOfic",
             position: "Desarrollador Backend",
-            duration: "Sept 2023 - Actualidad (2 años 3 meses)",
+            duration: "Sept 2023 - Mar 2026 (2 años 6 meses)",
             type: "Jornada completa",
             description:
               "Desarrollo de API de integración en tiempo real con FastAPI para sincronizar +50 sitios WordPress con CRM Odoo. Optimización de procesos con Python, mejora de experiencia de compra, implementación de arquitectura asíncrona con Celery, Redis y RabbitMQ.",

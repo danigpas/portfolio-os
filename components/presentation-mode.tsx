@@ -27,7 +27,7 @@ export function PresentationMode({ isOpen, onClose }: PresentationModeProps) {
           </div>
           <div className="space-y-2">
             <p className="text-xl">📍 Málaga, España</p>
-            <p className="text-lg">🚀 2+ años de experiencia</p>
+            <p className="text-lg">🚀 3+ años de experiencia</p>
             <p className="text-lg">💡 Especializado en FastAPI y Python</p>
           </div>
         </div>
@@ -35,7 +35,7 @@ export function PresentationMode({ isOpen, onClose }: PresentationModeProps) {
     },
     {
       title: "Experiencia Profesional",
-      subtitle: "Desarrollador Backend en DisOfic",
+      subtitle: "Semi-Senior Python Developer en Inforyde · antes Backend en DisOfic",
       content: (
         <div className="space-y-6">
           <div className="grid grid-cols-2 gap-8">

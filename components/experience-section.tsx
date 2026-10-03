@@ -32,6 +32,56 @@ export function ExperienceSection() {
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
                     <div>
                       <h3 className="text-xl font-heading font-bold text-foreground mb-1">
+                        {t("experience.inforyde.title")}
+                      </h3>
+                      <p className="text-primary font-semibold">{t("experience.inforyde.company")}</p>
+                    </div>
+                    <div className="flex items-center space-x-2 text-muted-foreground mt-2 md:mt-0">
+                      <Calendar className="w-4 h-4" />
+                      <span className="text-sm">{t("experience.inforyde.period")}</span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3 text-muted-foreground mb-4 leading-relaxed">
+                    <p>{t("experience.inforyde.description1")}</p>
+                    <p>{t("experience.inforyde.description2")}</p>
+                    <p>{t("experience.inforyde.description3")}</p>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="secondary" className="bg-primary/10 text-primary hover:bg-primary/20">
+                      Python
+                    </Badge>
+                    <Badge variant="secondary" className="bg-primary/10 text-primary hover:bg-primary/20">
+                      FastAPI
+                    </Badge>
+                    <Badge variant="secondary" className="bg-secondary/50 text-secondary-foreground">
+                      SQL
+                    </Badge>
+                    <Badge variant="secondary" className="bg-secondary/50 text-secondary-foreground">
+                      Git
+                    </Badge>
+                    <Badge variant="secondary" className="bg-accent/10 text-accent hover:bg-accent/20">
+                      Mercado eléctrico
+                    </Badge>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            <div
+              className="relative flex items-start space-x-6 pb-12 animate-slide-in-up"
+              style={{ animationDelay: "0.1s" }}
+            >
+              <div className="flex-shrink-0 w-16 h-16 bg-primary rounded-full flex items-center justify-center">
+                <Building className="w-8 h-8 text-primary-foreground" />
+              </div>
+
+              <Card className="flex-1 card-elevated">
+                <CardContent className="p-6">
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+                    <div>
+                      <h3 className="text-xl font-heading font-bold text-foreground mb-1">
                         {t("experience.disofic.title")}
                       </h3>
                       <p className="text-primary font-semibold">{t("experience.disofic.company")}</p>
