@@ -165,7 +165,7 @@ export function AvailabilityCalendar() {
       case "interview":
         return "bg-purple-100 text-purple-800"
       case "project_discussion":
-        return "bg-orange-100 text-orange-800"
+        return "bg-[var(--omarchy-accent)]/15 text-[var(--omarchy-accent)]"
       default:
         return "bg-gray-100 text-gray-800"
     }
@@ -199,7 +199,7 @@ export function AvailabilityCalendar() {
       <Card className="p-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-semibold flex items-center gap-2">
-            <Clock className="w-5 h-5 text-orange-500" />
+            <Clock className="w-5 h-5 text-[var(--omarchy-accent)]" />
             Estado Actual
           </h3>
           <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
@@ -280,7 +280,7 @@ export function AvailabilityCalendar() {
                     onClick={() => setSelectedDate(date)}
                     className={`w-full p-3 rounded-lg border text-left transition-all ${
                       selectedDate === date
-                        ? "border-orange-500 bg-orange-50"
+                        ? "border-[var(--omarchy-accent)] bg-[var(--omarchy-accent)]/10"
                         : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
                     }`}
                   >
@@ -357,7 +357,7 @@ export function AvailabilityCalendar() {
 
         {selectedDate && (
           <div className="mt-6 pt-6 border-t">
-            <Button className="w-full bg-orange-500 hover:bg-orange-600">
+            <Button className="w-full bg-[var(--omarchy-accent)] hover:bg-[var(--omarchy-accent)]/90">
               <Calendar className="w-4 h-4 mr-2" />
               Solicitar Reunión
             </Button>

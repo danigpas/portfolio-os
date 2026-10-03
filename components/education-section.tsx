@@ -1,12 +1,71 @@
 "use client"
 
+import type { LucideIcon } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { GraduationCap, Calendar, BookOpen } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
+import { getCvData } from "@/lib/cv-data"
+
+interface EducationPresentation {
+  /** Icono de la tarjeta; si falta se muestra `label`. */
+  icon?: LucideIcon
+  /** Texto mostrado en el círculo (alternativa al icono). */
+  label?: string
+  circleClass: string
+  iconClass: string
+  institutionClass: string
+  borderClass: string
+  badgeClass: string
+}
+
+/**
+ * Estilos por titulación. La información (título, institución, periodo,
+ * descripción, estado y tags) vive en `lib/cv-data.ts`; aquí sólo queda la
+ * presentación concreta de cada entrada del escritorio.
+ */
+const EDUCATION_PRESENTATION: Record<string, EducationPresentation> = {
+  daw: {
+    icon: BookOpen,
+    circleClass: "bg-green-500",
+    iconClass: "text-white",
+    institutionClass: "text-green-600",
+    borderClass: "border-l-green-500",
+    badgeClass: "bg-green-100 text-green-800 hover:bg-green-200",
+  },
+  cesur: {
+    icon: GraduationCap,
+    circleClass: "bg-primary",
+    iconClass: "text-primary-foreground",
+    institutionClass: "text-primary",
+    borderClass: "border-l-primary",
+    badgeClass: "bg-primary/10 text-primary hover:bg-primary/20",
+  },
+  uma: {
+    label: "UMA",
+    circleClass: "bg-accent",
+    iconClass: "",
+    institutionClass: "text-accent",
+    borderClass: "border-l-accent",
+    badgeClass: "bg-accent/10 text-accent hover:bg-accent/20",
+  },
+  uimp: {
+    label: "UIMP",
+    circleClass: "bg-blue-500",
+    iconClass: "",
+    institutionClass: "text-blue-600",
+    borderClass: "border-l-blue-500",
+    badgeClass: "bg-blue-50 text-blue-600 hover:bg-blue-100",
+  },
+}
+
+const DEFAULT_PRESENTATION: EducationPresentation = EDUCATION_PRESENTATION.cesur
+
+const TAG_BADGE_CLASS = "bg-secondary/50 text-secondary-foreground hover:bg-secondary/70"
 
 export function EducationSection() {
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
+  const { education } = getCvData(language)
 
   return (
     <section id="education" className="py-20 bg-gradient-to-br from-background via-secondary/5 to-accent/10">
@@ -22,168 +81,60 @@ export function EducationSection() {
             {/* Timeline line */}
             <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-primary/30"></div>
 
-            {/* DAW - Próximo */}
-            <div className="relative flex items-start space-x-6 pb-12 animate-slide-in-up">
-              <div className="flex-shrink-0 w-16 h-16 bg-green-500 rounded-full flex items-center justify-center animate-gentle-pulse">
-                <BookOpen className="w-8 h-8 text-white" />
-              </div>
+            {education.map((item, index) => {
+              const presentation = EDUCATION_PRESENTATION[item.id] ?? DEFAULT_PRESENTATION
+              const Icon = presentation.icon
 
-              <Card className="flex-1 card-elevated border-l-4 border-l-green-500">
-                <CardContent className="p-6">
-                  <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
-                    <div>
-                      <h3 className="text-xl font-heading font-bold text-foreground mb-1">
-                        {t("education.daw.title")}
-                      </h3>
-                      <p className="text-green-600 font-semibold">{t("education.daw.institution")}</p>
-                    </div>
-                    <div className="flex items-center space-x-2 text-muted-foreground mt-2 md:mt-0">
-                      <Calendar className="w-4 h-4" />
-                      <span className="text-sm">{t("education.daw.period")}</span>
-                    </div>
+              return (
+                <div
+                  key={item.id}
+                  className="relative flex items-start space-x-6 pb-12 animate-slide-in-up"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <div
+                    className={`flex-shrink-0 w-16 h-16 ${presentation.circleClass} rounded-full flex items-center justify-center ${
+                      index === 0 ? "animate-gentle-pulse" : ""
+                    }`}
+                  >
+                    {Icon ? (
+                      <Icon className={`w-8 h-8 ${presentation.iconClass}`} />
+                    ) : (
+                      <span className="text-white font-bold text-sm">{presentation.label}</span>
+                    )}
                   </div>
 
-                  <p className="text-muted-foreground mb-4 leading-relaxed">{t("education.daw.description")}</p>
+                  <Card className={`flex-1 card-elevated border-l-4 ${presentation.borderClass}`}>
+                    <CardContent className="p-6">
+                      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+                        <div>
+                          <h3 className="text-xl font-heading font-bold text-foreground mb-1">{item.title}</h3>
+                          <p className={`${presentation.institutionClass} font-semibold`}>{item.institution}</p>
+                        </div>
+                        <div className="flex items-center space-x-2 text-muted-foreground mt-2 md:mt-0">
+                          <Calendar className="w-4 h-4" />
+                          <span className="text-sm">{item.period}</span>
+                        </div>
+                      </div>
 
-                  <div className="flex flex-wrap gap-2">
-                    <Badge variant="secondary" className="bg-green-100 text-green-800 hover:bg-green-200">
-                      {t("education.daw.upcoming")}
-                    </Badge>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+                      <p className="text-muted-foreground mb-4 leading-relaxed">{item.description}</p>
 
-            {/* Cesur */}
-            <div
-              className="relative flex items-start space-x-6 pb-12 animate-slide-in-up"
-              style={{ animationDelay: "0.1s" }}
-            >
-              <div className="flex-shrink-0 w-16 h-16 bg-primary rounded-full flex items-center justify-center">
-                <GraduationCap className="w-8 h-8 text-primary-foreground" />
-              </div>
-
-              <Card className="flex-1 card-elevated border-l-4 border-l-primary">
-                <CardContent className="p-6">
-                  <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
-                    <div>
-                      <h3 className="text-xl font-heading font-bold text-foreground mb-1">
-                        {t("education.cesur.title")}
-                      </h3>
-                      <p className="text-primary font-semibold">{t("education.cesur.institution")}</p>
-                    </div>
-                    <div className="flex items-center space-x-2 text-muted-foreground mt-2 md:mt-0">
-                      <Calendar className="w-4 h-4" />
-                      <span className="text-sm">{t("education.cesur.period")}</span>
-                    </div>
-                  </div>
-
-                  <p className="text-muted-foreground mb-4 leading-relaxed">{t("education.cesur.description")}</p>
-
-                  <div className="flex flex-wrap gap-2">
-                    <Badge variant="secondary" className="bg-primary/10 text-primary hover:bg-primary/20">
-                      HTML
-                    </Badge>
-                    <Badge variant="secondary" className="bg-primary/10 text-primary hover:bg-primary/20">
-                      GitHub
-                    </Badge>
-                    <Badge variant="secondary" className="bg-accent/10 text-accent hover:bg-accent/20">
-                      Visual Studio
-                    </Badge>
-                    <Badge variant="secondary" className="bg-accent/10 text-accent hover:bg-accent/20">
-                      C#
-                    </Badge>
-                    <Badge variant="secondary" className="bg-secondary/50 text-secondary-foreground">
-                      Documentación
-                    </Badge>
-                    <Badge variant="secondary" className="bg-secondary/50 text-secondary-foreground">
-                      MySQL
-                    </Badge>
-                    <Badge variant="secondary" className="bg-accent/10 text-accent hover:bg-accent/20">
-                      .NET Framework
-                    </Badge>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Universidad de Málaga */}
-            <div
-              className="relative flex items-start space-x-6 pb-12 animate-slide-in-up"
-              style={{ animationDelay: "0.2s" }}
-            >
-              <div className="flex-shrink-0 w-16 h-16 bg-accent rounded-full flex items-center justify-center">
-                <div className="w-8 h-8 bg-accent-foreground rounded-sm flex items-center justify-center">
-                  <span className="text-accent font-bold text-sm">UMA</span>
+                      <div className="flex flex-wrap gap-2">
+                        {item.status && (
+                          <Badge variant="secondary" className={presentation.badgeClass}>
+                            {item.status}
+                          </Badge>
+                        )}
+                        {item.tags?.map((tag) => (
+                          <Badge key={tag} variant="secondary" className={TAG_BADGE_CLASS}>
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
-              </div>
-
-              <Card className="flex-1 card-elevated border-l-4 border-l-accent">
-                <CardContent className="p-6">
-                  <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
-                    <div>
-                      <h3 className="text-xl font-heading font-bold text-foreground mb-1">
-                        {t("education.uma.title")}
-                      </h3>
-                      <p className="text-accent font-semibold">{t("education.uma.institution")}</p>
-                    </div>
-                    <div className="flex items-center space-x-2 text-muted-foreground mt-2 md:mt-0">
-                      <Calendar className="w-4 h-4" />
-                      <span className="text-sm">{t("education.uma.period")}</span>
-                    </div>
-                  </div>
-
-                  <p className="text-muted-foreground mb-4 leading-relaxed">{t("education.uma.description")}</p>
-
-                  <div className="flex flex-wrap gap-2">
-                    <Badge variant="outline" className="border-accent text-accent hover:bg-accent/10">
-                      Documentación
-                    </Badge>
-                    <Badge variant="outline" className="border-accent text-accent hover:bg-accent/10">
-                      {t("education.uma.skills")}
-                    </Badge>
-                    <Badge variant="outline" className="border-primary text-primary hover:bg-primary/10">
-                      {t("education.uma.problem_solving")}
-                    </Badge>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Universidad Internacional Menéndez Pelayo */}
-            <div className="relative flex items-start space-x-6 animate-slide-in-up" style={{ animationDelay: "0.3s" }}>
-              <div className="flex-shrink-0 w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-sm">UIMP</span>
-              </div>
-
-              <Card className="flex-1 card-elevated border-l-4 border-l-blue-500">
-                <CardContent className="p-6">
-                  <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
-                    <div>
-                      <h3 className="text-xl font-heading font-bold text-foreground mb-1">
-                        {t("education.uimp.title")}
-                      </h3>
-                      <p className="text-blue-600 font-semibold">{t("education.uimp.institution")}</p>
-                    </div>
-                    <div className="flex items-center space-x-2 text-muted-foreground mt-2 md:mt-0">
-                      <Calendar className="w-4 h-4" />
-                      <span className="text-sm">{t("education.uimp.period")}</span>
-                    </div>
-                  </div>
-
-                  <p className="text-muted-foreground mb-4 leading-relaxed">{t("education.uimp.description")}</p>
-
-                  <div className="flex flex-wrap gap-2">
-                    <Badge variant="outline" className="border-blue-500 text-blue-600 hover:bg-blue-50">
-                      {t("education.uimp.skills")}
-                    </Badge>
-                    <Badge variant="outline" className="border-blue-500 text-blue-600 hover:bg-blue-50">
-                      B1
-                    </Badge>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+              )
+            })}
           </div>
         </div>
       </div>

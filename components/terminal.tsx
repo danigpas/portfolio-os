@@ -1,213 +1,278 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { useTheme } from "@/components/theme-system"
-import { X, Minimize2, Maximize2 } from "lucide-react"
+import { useLanguage } from "@/components/language-provider"
+import { getCvData } from "@/lib/cv-data"
+import { APP_NAMES, THEME_NAMES } from "@/lib/omarchy-config"
 
-interface TerminalProps {
-  onClose: () => void
-  onMinimize?: () => void
-  onMaximize?: () => void
+export interface TerminalProps {
+  onClose?: () => void
+  onOpenApp?: (app: string) => void
+  onNavigate?: (section: string) => void
+  onDownloadCv?: () => void
+  onSetTheme?: (theme: string) => boolean
   onReboot?: () => void
   onSuspend?: () => void
   onShutdown?: () => void
 }
 
-export function Terminal({ onClose, onMinimize, onMaximize, onReboot, onSuspend, onShutdown }: TerminalProps) {
+interface TerminalEntry {
+  id: number
+  command: string
+  output: string
+}
 
+export function Terminal({
+  onOpenApp,
+  onNavigate,
+  onDownloadCv,
+  onSetTheme,
+  onReboot,
+  onSuspend,
+  onShutdown,
+}: TerminalProps) {
+  const { language } = useLanguage()
+  const { theme } = useTheme()
+  const cv = useMemo(() => getCvData(language), [language])
 
   const [input, setInput] = useState("")
-  const [history, setHistory] = useState<Array<{ command: string; output: string; timestamp: Date }>>([])
-  const [isMaximized, setIsMaximized] = useState(false)
+  const [entries, setEntries] = useState<TerminalEntry[]>([])
+  const [commandLog, setCommandLog] = useState<string[]>([])
+  const [navIndex, setNavIndex] = useState<number | null>(null)
+  const entryIdRef = useRef(0)
   const inputRef = useRef<HTMLInputElement>(null)
-  const { theme } = useTheme()
+  const scrollRef = useRef<HTMLDivElement>(null)
+
+  const corpus = {
+    help: () => `Comandos disponibles:
+  help              Muestra esta ayuda
+  about             Abre la sección Sobre mí
+  experience        Abre Experiencia
+  projects          Abre Proyectos
+  education         Abre Educación
+  contact           Abre Contacto
+  cv --download     Descarga el CV en PDF
+  theme             Lista los temas disponibles
+  theme <nombre>    Cambia el tema del sistema
+  open <app>        Abre una app (${APP_NAMES.join(", ")})
+  clear             Limpia la terminal
+  whoami            Usuario actual
+  reboot            Reinicia el sistema
+  suspend           Suspende la sesión
+  shutdown          Apaga el sistema`,
+    about: () => {
+      onNavigate?.("GET /about")
+      onOpenApp?.("postman")
+      return `${cv.about.name}\n${cv.about.role}\n${cv.contact.location}\n${cv.about.yearsOfExperience} · ${cv.about.tagline}`
+    },
+    experience: () => {
+      onNavigate?.("GET /experience")
+      onOpenApp?.("postman")
+      return `Experiencia:\n${cv.experience
+        .map((job) => `  • ${job.role} @ ${job.company} (${job.period})`)
+        .join("\n")}`
+    },
+    projects: () => {
+      onNavigate?.("GET /projects")
+      onOpenApp?.("postman")
+      return `Proyectos:\n${cv.projects.map((project) => `  • ${project.name}: ${project.description}`).join("\n")}`
+    },
+    education: () => {
+      onNavigate?.("GET /education")
+      onOpenApp?.("postman")
+      return `Formación:\n${cv.education
+        .map((item) => `  • ${item.title} — ${item.institution} (${item.period})`)
+        .join("\n")}`
+    },
+    contact: () => {
+      onNavigate?.("POST /contact")
+      onOpenApp?.("postman")
+      return `Contacto:\n  • Email: ${cv.contact.email}\n  • LinkedIn: ${cv.contact.linkedin}\n  • GitHub: ${cv.contact.github}`
+    },
+    skills: () => `Habilidades:\n${cv.skills.map((group) => `  • ${group.category}: ${group.items.join(", ")}`).join("\n")}`,
+  }
 
   useEffect(() => {
-    // Welcome message
-    setHistory([
+    setEntries([
       {
+        id: entryIdRef.current++,
         command: "",
-        output: `Daniel González Pascual Terminal v1.0
-Desarrollador Backend Python | Málaga, España
-Escribe 'help' para ver comandos disponibles`,
-        timestamp: new Date(),
+        output: `${cv.about.name} · terminal v2.0\n${cv.about.role} · ${cv.contact.location}\nEscribe 'help' para ver los comandos. Ctrl+K abre el lanzador.`,
       },
     ])
+    // Sólo el mensaje de bienvenida inicial.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus()
-    }
+    inputRef.current?.focus()
   }, [])
 
-  const commands = {
-    help: () => `Comandos disponibles:
-• about - Información personal
-• skills - Habilidades técnicas
-• experience - Experiencia laboral
-• projects - Proyectos realizados
-• education - Formación académica
-• contact - Información de contacto
-• git status - Estado del repositorio
-• python --version - Versión de Python
-• docker ps - Contenedores activos
-• clear - Limpiar terminal
-• whoami - Usuario actual
-• reboot - Reiniciar el sistema
-• suspend - Suspender la sesión
-• shutdown - Apagar el sistema`,
+  useEffect(() => {
+    const node = scrollRef.current
+    if (node) node.scrollTop = node.scrollHeight
+  }, [entries])
 
-    about: () => `Daniel González Pascual
-Desarrollador Backend especializado en Python
-📍 Málaga, España
-🎯 2+ años de experiencia
-🚀 Apasionado por crear soluciones eficientes`,
+  const append = (command: string, output: string) => {
+    setEntries((current) => [...current, { id: entryIdRef.current++, command, output }])
+  }
 
-    skills: () => `Habilidades Técnicas:
-• Backend: Python (FastAPI, Flask, Django), Node.js
-• Frontend: React, Next.js, TypeScript
-• Bases de Datos: MySQL, PostgreSQL, Oracle
-• DevOps: Docker, Kubernetes, CI/CD
-• Otros: Odoo, WordPress`,
+  const runCommand = (raw: string): string => {
+    const trimmed = raw.trim()
+    if (!trimmed) return ""
+    const [head, ...args] = trimmed.split(/\s+/)
+    const command = head.toLowerCase()
+    const rest = args.join(" ").toLowerCase()
 
-    experience: () => `Experiencia Laboral:
-• Desarrollador Backend en Aftalia (2022 - Presente)
-• ...`,
-
-    projects: () => `Proyectos Realizados:
-• Portfolio personal con Next.js y TypeScript
-• ...`,
-
-    education: () => `Formación Académica:
-• Grado en Ingeniería de Software - Universidad de Málaga (2018 - 2022)
-• ...`,
-
-    contact: () => `Información de Contacto:
-• Email: daniel.gonzalez.pascual@email.com
-• LinkedIn: linkedin.com/in/daniel-gonzalez-pascual
-• GitHub: github.com/daniel-gonzalez-pascual`,
-
-    "git status": () => `On branch main
-Your branch is up to date with 'origin/main'.
-
-nothing to commit, working tree clean`,
-
-    "python --version": () => `Python 3.10.4`,
-
-    "docker ps": () => `CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES`,
-
-    clear: () => {
-      setHistory([])
+    if (command === "clear") {
+      setEntries([])
       return ""
-    },
-
-    whoami: () => `guest`,
-
-    reboot: () => {
-      if (onReboot) {
-        onReboot()
+    }
+    if (command === "whoami") return "guest"
+    if (command === "sudo") return "guest no está en el fichero sudoers. Este incidente será reportado."
+    if (command === "theme") {
+      if (!rest) return `Tema actual: ${theme}\nDisponibles: ${THEME_NAMES.join(", ")}`
+      const changed = onSetTheme?.(rest)
+      if (changed === false) {
+        return `Tema no válido: '${rest}'.\nTemas válidos: ${THEME_NAMES.join(", ")}.`
       }
-      return "Reiniciando..."
-    },
-
-    suspend: () => {
-      if (onSuspend) {
-        onSuspend()
+      return `Tema cambiado a '${rest}'.`
+    }
+    if (command === "cv") {
+      if (rest === "--download" || rest === "") {
+        onDownloadCv?.()
+        return "Descargando CV…"
       }
-      return "Suspendiendo..."
-    },
+      return "Uso: cv --download"
+    }
+    if (command === "open") {
+      if (!rest) return `Uso: open <app>. Apps: ${APP_NAMES.join(", ")}`
+      onOpenApp?.(rest)
+      return `Abriendo '${rest}'…`
+    }
+    if (command === "reboot") {
+      onReboot?.()
+      return "Reiniciando el sistema…"
+    }
+    if (command === "suspend") {
+      onSuspend?.()
+      return "Suspendiendo la sesión…"
+    }
+    if (command === "shutdown") {
+      onShutdown?.()
+      return "Apagando el sistema…"
+    }
 
-    shutdown: () => {
-      if (onShutdown) {
-        onShutdown()
-      }
-      return "Apagando..."
-    },
+    const handler = corpus[command as keyof typeof corpus]
+    if (handler) return handler()
+    return `Comando no encontrado: ${trimmed}. Escribe 'help'.`
   }
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInput(e.target.value)
+  const submit = () => {
+    const value = input.trim()
+    if (!value) return
+    const output = runCommand(value)
+    if (value.toLowerCase() !== "clear") {
+      append(value, output)
+      setCommandLog((current) => [...current, value])
+    }
+    setInput("")
+    setNavIndex(null)
   }
 
-  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      const command = input.trim().toLowerCase()
-      if (command) {
-        const output = commands[command]?.() || `Comando no encontrado: ${command}`
-        setHistory([...history, { command, output, timestamp: new Date() }])
+  const completions = (): string[] => {
+    const tokens = input.split(/\s+/)
+    if (tokens.length <= 1) {
+      return ["help", "about", "experience", "projects", "education", "contact", "skills", "cv --download", "theme", "open", "reboot", "suspend", "shutdown", "clear", "whoami"].filter((candidate) =>
+        candidate.startsWith(input.trim().toLowerCase()),
+      )
+    }
+    if (tokens[0] === "theme") {
+      return THEME_NAMES.filter((name) => name.startsWith(tokens[tokens.length - 1].toLowerCase()))
+    }
+    if (tokens[0] === "open") {
+      return APP_NAMES.filter((name) => name.startsWith(tokens[tokens.length - 1].toLowerCase()))
+    }
+    return []
+  }
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      event.preventDefault()
+      submit()
+      return
+    }
+    if (event.key === "ArrowUp") {
+      event.preventDefault()
+      if (commandLog.length === 0) return
+      const nextIndex = navIndex === null ? commandLog.length - 1 : Math.max(0, navIndex - 1)
+      setNavIndex(nextIndex)
+      setInput(commandLog[nextIndex])
+      return
+    }
+    if (event.key === "ArrowDown") {
+      event.preventDefault()
+      if (navIndex === null) return
+      const nextIndex = navIndex + 1
+      if (nextIndex >= commandLog.length) {
+        setNavIndex(null)
         setInput("")
+      } else {
+        setNavIndex(nextIndex)
+        setInput(commandLog[nextIndex])
+      }
+      return
+    }
+    if (event.key === "Tab") {
+      event.preventDefault()
+      const matches = completions()
+      if (matches.length === 1) {
+        const tokens = input.split(/\s+/)
+        if (tokens.length <= 1) setInput(matches[0])
+        else setInput(`${tokens.slice(0, -1).join(" ")} ${matches[0]}`)
+      } else if (matches.length > 1) {
+        append(input, matches.join("  "))
       }
     }
-  }
-
-  const handleMinimize = () => {
-    if (onMinimize) onMinimize()
-  }
-
-  const handleMaximize = () => {
-    setIsMaximized(!isMaximized)
-    if (onMaximize) onMaximize()
   }
 
   return (
-    <div className={`absolute ${isMaximized ? "inset-8 z-40" : "top-1/4 left-1/4 w-1/2 h-1/2 z-30"} rounded-lg shadow-2xl border overflow-hidden transition-all duration-300 bg-black text-white font-mono text-sm flex flex-col`}>
-      <div className="flex items-center justify-between px-4 py-2 bg-gray-800 rounded-t-lg">
-        <div className="flex items-center space-x-2">
-          <button
-            className="w-3 h-3 bg-red-500 rounded-full hover:bg-red-600 transition-colors"
-            onClick={onClose}
-          ></button>
-          <button
-            className="w-3 h-3 bg-yellow-500 rounded-full hover:bg-yellow-600 transition-colors"
-            onClick={handleMinimize}
-          ></button>
-          <button
-            className="w-3 h-3 bg-green-500 rounded-full hover:bg-green-600 transition-colors"
-            onClick={handleMaximize}
-          ></button>
-        </div>
-        <span className="text-xs">daniel@portfolio: ~</span>
-        <div className="flex items-center space-x-2">
-            <button
-              className={`p-1 rounded transition-colors hover:bg-gray-600`}
-              onClick={handleMinimize}
-            >
-              <Minimize2 className="w-4 h-4" />
-            </button>
-            <button
-              className={`p-1 rounded transition-colors hover:bg-gray-600`}
-              onClick={handleMaximize}
-            >
-              <Maximize2 className="w-4 h-4" />
-            </button>
-            <button
-              className={`p-1 rounded transition-colors hover:bg-gray-600`}
-              onClick={onClose}
-            >
-              <X className="w-4 h-4" />
-            </button>
-        </div>
-      </div>
-      <div className="flex-grow p-4 overflow-y-auto" onClick={() => inputRef.current?.focus()}>
-        {history.map((item, index) => (
-          <div key={index} className="mb-4">
-            <div className="flex items-center">
-              <span className="text-green-400">daniel@portfolio:~$</span>
-              <span className="ml-2">{item.command}</span>
-            </div>
-            <div className="whitespace-pre-wrap">{item.output}</div>
+    <div className="flex h-full flex-col bg-[var(--omarchy-bg,#0d0d10)] font-[family-name:var(--font-jetbrains-mono),ui-monospace,monospace] text-sm text-[var(--omarchy-fg,#e6e6e6)]">
+      <div
+        ref={scrollRef}
+        role="log"
+        aria-label="Salida de la terminal"
+        aria-live="polite"
+        className="flex-1 overflow-y-auto p-4"
+        onClick={() => inputRef.current?.focus()}
+      >
+        {entries.map((entry) => (
+          <div key={entry.id} className="mb-3 whitespace-pre-wrap">
+            {entry.command ? (
+              <div className="flex">
+                <span className="text-[var(--omarchy-accent,#4ade80)]">daniel@portfolio:~$</span>
+                <span className="ml-2">{entry.command}</span>
+              </div>
+            ) : null}
+            {entry.output ? <div className="text-[var(--omarchy-fg,#d4d4d8)]">{entry.output}</div> : null}
           </div>
         ))}
         <div className="flex items-center">
-          <span className="text-green-400">daniel@portfolio:~$</span>
+          <span className="text-[var(--omarchy-accent,#4ade80)]">daniel@portfolio:~$</span>
           <input
             ref={inputRef}
             type="text"
             value={input}
-            onChange={handleInputChange}
-            onKeyDown={handleInputKeyDown}
-            className="bg-transparent border-none focus:ring-0 focus:outline-none w-full ml-2"
+            onChange={(event) => {
+              setInput(event.target.value)
+              setNavIndex(null)
+            }}
+            onKeyDown={handleKeyDown}
+            aria-label="Entrada de comandos"
+            autoComplete="off"
+            spellCheck={false}
+            className="ml-2 w-full border-none bg-transparent outline-none"
           />
         </div>
       </div>

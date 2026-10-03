@@ -4,9 +4,11 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Mail, MapPin, Linkedin, Github } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
+import { getCvData } from "@/lib/cv-data"
 
 export function ContactSection() {
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
+  const { contact } = getCvData(language)
 
   return (
     <section id="contact" className="py-20 bg-gradient-to-br from-secondary/10 via-accent/5 to-background">
@@ -29,7 +31,7 @@ export function ContactSection() {
                     </div>
                     <div>
                       <h3 className="font-heading font-semibold text-lg mb-1">Email</h3>
-                      <p className="text-muted-foreground">daniel@example.com</p>
+                      <p className="text-muted-foreground">{contact.email}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -43,7 +45,7 @@ export function ContactSection() {
                     </div>
                     <div>
                       <h3 className="font-heading font-semibold text-lg mb-1">Ubicación</h3>
-                      <p className="text-muted-foreground">Málaga, España</p>
+                      <p className="text-muted-foreground">{contact.location}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -52,13 +54,13 @@ export function ContactSection() {
               {/* Social Links */}
               <div className="flex space-x-4">
                 <Button className="btn-outline flex-1" asChild>
-                  <a href="https://linkedin.com/in/danielgonzalezpascual" target="_blank" rel="noopener noreferrer">
+                  <a href={contact.linkedin} target="_blank" rel="noopener noreferrer">
                     <Linkedin className="w-5 h-5 mr-2" />
                     LinkedIn
                   </a>
                 </Button>
                 <Button className="btn-outline flex-1" asChild>
-                  <a href="https://github.com/danielgonzalezpascual" target="_blank" rel="noopener noreferrer">
+                  <a href={contact.github} target="_blank" rel="noopener noreferrer">
                     <Github className="w-5 h-5 mr-2" />
                     GitHub
                   </a>
@@ -83,7 +85,7 @@ export function ContactSection() {
                 </div>
 
                 <Button className="btn-primary w-full" asChild>
-                  <a href="mailto:daniel@example.com">
+                  <a href={`mailto:${contact.email}`}>
                     <Mail className="w-5 h-5 mr-2" />
                     {t("contact.email")}
                   </a>

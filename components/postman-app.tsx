@@ -2,9 +2,6 @@
 
 import { useState, useEffect } from "react"
 import {
-  X,
-  Minimize2,
-  Maximize2,
   Play,
   User,
   Briefcase,
@@ -24,7 +21,7 @@ import {
   Smartphone,
 } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
-import { useTheme } from "@/components/theme-system"
+import { getCvData } from "@/lib/cv-data"
 import { AboutSection } from "@/components/about-section"
 import { ExperienceSection } from "@/components/experience-section"
 import { EducationSection } from "@/components/education-section"
@@ -43,17 +40,12 @@ import { ApiMetrics } from "@/components/api-metrics"
 import { DeveloperMode } from "@/components/developer-mode"
 
 interface PostmanAppProps {
-  onMinimize?: () => void
-  onMaximize?: () => void
-  onClose?: () => void
   initialSection?: string
 }
 
-export function PostmanApp({ onMinimize, onMaximize, onClose, initialSection = "GET /about" }: PostmanAppProps) {
-  const { t, language } = useLanguage()
-  const { theme, getAppClasses } = useTheme()
+export function PostmanApp({ initialSection = "GET /about" }: PostmanAppProps) {
+  const { language } = useLanguage()
   const [activeEndpoint, setActiveEndpoint] = useState(initialSection)
-  const [isMaximized, setIsMaximized] = useState(false)
   const [showPreview, setShowPreview] = useState(false)
   const [showMetrics, setShowMetrics] = useState(false)
   const [showDeveloperMode, setShowDeveloperMode] = useState(false)
@@ -68,18 +60,18 @@ export function PostmanApp({ onMinimize, onMaximize, onClose, initialSection = "
   }, [initialSection])
 
   const endpoints = [
-    { method: "GET", path: "/about", name: "Sobre mí", icon: User, color: "text-green-500" },
-    { method: "GET", path: "/experience", name: "Experiencia", icon: Briefcase, color: "text-blue-500" },
-    { method: "GET", path: "/education", name: "Educación", icon: GraduationCap, color: "text-purple-500" },
-    { method: "GET", path: "/projects", name: "Proyectos", icon: Code, color: "text-orange-500" },
-    { method: "GET", path: "/certifications", name: "Certificaciones", icon: Award, color: "text-yellow-500" },
-    { method: "GET", path: "/blog", name: "Blog Técnico", icon: BookOpen, color: "text-indigo-500" },
-    { method: "GET", path: "/testimonials", name: "Testimonios", icon: MessageSquare, color: "text-pink-500" },
-    { method: "GET", path: "/case-studies", name: "Case Studies", icon: FileText, color: "text-teal-500" },
-    { method: "GET", path: "/analytics", name: "Analytics", icon: BarChart3, color: "text-cyan-500" },
-    { method: "GET", path: "/availability", name: "Disponibilidad", icon: Calendar, color: "text-emerald-500" },
-    { method: "GET", path: "/pwa", name: "PWA Features", icon: Smartphone, color: "text-violet-500" },
-    { method: "POST", path: "/contact", name: "Contacto", icon: Mail, color: "text-red-500" },
+    { method: "GET", path: "/about", name: "Sobre mí", icon: User },
+    { method: "GET", path: "/experience", name: "Experiencia", icon: Briefcase },
+    { method: "GET", path: "/education", name: "Educación", icon: GraduationCap },
+    { method: "GET", path: "/projects", name: "Proyectos", icon: Code },
+    { method: "GET", path: "/certifications", name: "Certificaciones", icon: Award },
+    { method: "GET", path: "/blog", name: "Blog Técnico", icon: BookOpen },
+    { method: "GET", path: "/testimonials", name: "Testimonios", icon: MessageSquare },
+    { method: "GET", path: "/case-studies", name: "Case Studies", icon: FileText },
+    { method: "GET", path: "/analytics", name: "Analytics", icon: BarChart3 },
+    { method: "GET", path: "/availability", name: "Disponibilidad", icon: Calendar },
+    { method: "GET", path: "/pwa", name: "PWA Features", icon: Smartphone },
+    { method: "POST", path: "/contact", name: "Contacto", icon: Mail },
   ]
 
   const handleEndpointClick = (endpoint: string) => {
@@ -117,21 +109,20 @@ export function PostmanApp({ onMinimize, onMaximize, onClose, initialSection = "
   }
 
   const getEndpointData = (endpoint: string) => {
+    const cv = getCvData(language)
     const endpointData = {
       "GET /about": {
         status: 200,
         responseTime: "45ms",
         data: {
-          name: "Daniel González Pascual",
-          role: "Desarrollador Backend Python",
-          location: "Málaga, España",
-          description:
-            language === "es"
-              ? "Desarrollador backend especializado en Python con experiencia en FastAPI, Django y arquitecturas escalables. Apasionado por crear soluciones eficientes y robustas."
-              : "Backend developer specialized in Python with experience in FastAPI, Django and scalable architectures. Passionate about creating efficient and robust solutions.",
-          skills: ["Python", "FastAPI", "Django", "PostgreSQL", "Redis", "Docker", "AWS"],
-          yearsOfExperience: 2.3,
-          currentlyLearning: "Desarrollo de Aplicaciones Web (DAW)",
+          name: cv.about.name,
+          role: cv.about.role,
+          location: cv.contact.location,
+          description: cv.about.summary,
+          skills: cv.skills.flatMap((group) => group.items),
+          yearsOfExperience: cv.about.yearsOfExperience,
+          currentlyLearning:
+            language === "es" ? "Desarrollo de Aplicaciones Web (DAW)" : "Web Application Development (DAW)",
         },
       },
       "GET /analytics": {
@@ -227,77 +218,27 @@ export function PostmanApp({ onMinimize, onMaximize, onClose, initialSection = "
       "GET /experience": {
         status: 200,
         responseTime: "38ms",
-        data: [
-          {
-            company: "DisOfic",
-            position: "Desarrollador Backend",
-            duration: "Sept 2023 - Actualidad (2 años 3 meses)",
-            type: "Jornada completa",
-            description:
-              "Desarrollo de API de integración en tiempo real con FastAPI para sincronizar +50 sitios WordPress con CRM Odoo. Optimización de procesos con Python, mejora de experiencia de compra, implementación de arquitectura asíncrona con Celery, Redis y RabbitMQ.",
-            technologies: ["Python", "FastAPI", "MySQL", "PostgreSQL", "Redis", "Celery", "RabbitMQ"],
-            achievements: [
-              "Automatización de consulta de stock y precios de +12,000 productos",
-              "Reducción del 50% en incidencias relacionadas con pedidos",
-              "Implementación de sistema de workers para sincronización masiva",
-            ],
-          },
-          {
-            company: "DisOfic",
-            position: "Desarrollador de Aplicaciones",
-            duration: "Jun 2023 - Sept 2023 (4 meses)",
-            type: "Contrato de prácticas",
-            description:
-              "Desarrollo de aplicación para gestión de almacén y entrada/salida de mercancía. Aplicación de escritorio en C# con Oracle Forms.",
-            technologies: ["C#", "Oracle Forms", "Arquitectura de aplicación"],
-            achievements: ["Mejora en funcionalidad y velocidad de la aplicación existente"],
-          },
-        ],
+        data: cv.experience.map((job) => ({
+          company: job.company,
+          position: job.role,
+          duration: `${job.period}${job.current ? (language === "es" ? " (actual)" : " (current)") : ""}`,
+          location: job.location,
+          type: job.type,
+          description: [job.summary, ...job.highlights].join(" "),
+          technologies: job.stack,
+          achievements: job.highlights,
+        })),
       },
       "GET /education": {
         status: 200,
         responseTime: "42ms",
-        data: [
-          {
-            institution: "Junta de Andalucía",
-            degree: "Técnico Superior en Desarrollo de Aplicaciones Web (DAW)",
-            period: "Sept 2025 - Jun 2027",
-            status: "En curso",
-            description: "Formación avanzada en desarrollo web full-stack",
-          },
-          {
-            institution: "Cesur",
-            degree: "Certificado de Profesionalidad - Programación de Sistemas Informáticos",
-            period: "Feb 2023 - Jun 2023",
-            status: "Completado",
-            specialization: "Desarrollo de aplicaciones",
-            skills: [
-              "HTML",
-              "GitHub",
-              "Visual Studio",
-              "C#",
-              "Documentación",
-              "Habilidades sociales",
-              "MySQL",
-              "Resolución de problemas",
-              ".NET Framework",
-            ],
-          },
-          {
-            institution: "Universidad de Málaga",
-            degree: "Grado en Ingeniería Informática",
-            period: "Sept 2017 - Sept 2021",
-            status: "Completado",
-            skills: ["Documentación", "Habilidades sociales", "Resolución de problemas"],
-          },
-          {
-            institution: "Universidad Internacional Menéndez Pelayo",
-            degree: "Curso de Inmersión en Lengua Inglesa",
-            period: "Jul 2019 - Jul 2019",
-            level: "B1",
-            skills: ["Habilidades sociales"],
-          },
-        ],
+        data: cv.education.map((item) => ({
+          institution: item.institution,
+          degree: item.title,
+          period: item.period,
+          status: item.status,
+          description: item.description,
+        })),
       },
       "GET /projects": {
         status: 200,
@@ -417,10 +358,10 @@ export function PostmanApp({ onMinimize, onMaximize, onClose, initialSection = "
         data: {
           message: "Endpoint de contacto disponible",
           methods: ["email", "linkedin", "github"],
-          email: "daniel@example.com",
-          linkedin: "https://linkedin.com/in/daniel-gonzalez-pascual",
-          github: "https://github.com/danielgonzalezpascual",
-          location: "Málaga, España",
+          email: cv.contact.email,
+          linkedin: cv.contact.linkedin,
+          github: cv.contact.github,
+          location: cv.contact.location,
           availability: "Disponible para nuevas oportunidades",
         },
       },
@@ -431,135 +372,56 @@ export function PostmanApp({ onMinimize, onMaximize, onClose, initialSection = "
 
   const currentData = getEndpointData(activeEndpoint)
 
-  const handleMinimize = () => {
-    if (onMinimize) onMinimize()
-  }
-
-  const handleMaximize = () => {
-    setIsMaximized(!isMaximized)
-    if (onMaximize) onMaximize()
-  }
-
-  const handleClose = () => {
-    if (onClose) onClose()
-  }
-
-  const getWindowClasses = () => {
-    switch (theme) {
-      case "matrix":
-        return "bg-black border-green-500 text-green-400"
-      case "vscode":
-        return "bg-gray-800 border-gray-600 text-gray-100"
-      default:
-        return "bg-white border-gray-300 text-gray-900"
-    }
-  }
-
-  const getHeaderClasses = () => {
-    switch (theme) {
-      case "matrix":
-        return "bg-black border-green-500"
-      case "vscode":
-        return "bg-gray-700 border-gray-600"
-      default:
-        return "bg-gray-100 border-gray-300"
-    }
-  }
-
-  const getSidebarClasses = () => {
-    switch (theme) {
-      case "matrix":
-        return "bg-gray-900 border-green-500"
-      case "vscode":
-        return "bg-gray-800 border-gray-600"
-      default:
-        return "bg-gray-50 border-gray-300"
-    }
-  }
+  const getWindowClasses = () => "om-window"
+  const getHeaderClasses = () => "om-panel border-b"
+  const getSidebarClasses = () => "om-inset border-r"
 
   return (
     <>
       <div
-        className={`absolute ${isMaximized ? "inset-8 z-40" : "top-16 left-1/2 transform -translate-x-1/2 w-[90%] max-w-6xl h-[90%] z-30"} rounded-lg shadow-2xl border overflow-hidden transition-all duration-300 ${getWindowClasses()}`}
+        className={`flex h-full min-h-0 flex-col overflow-hidden border font-mono text-sm ${getWindowClasses()}`}
       >
-        {/* Window controls */}
-        <div className={`border-b px-4 py-2 flex items-center justify-between ${getHeaderClasses()}`}>
-          <div className="flex items-center space-x-2">
-            <div className="flex space-x-2">
-              <button
-                className="w-3 h-3 bg-red-500 rounded-full hover:bg-red-600 transition-colors"
-                onClick={handleClose}
-              ></button>
-              <button
-                className="w-3 h-3 bg-yellow-500 rounded-full hover:bg-yellow-600 transition-colors"
-                onClick={handleMinimize}
-              ></button>
-              <button
-                className="w-3 h-3 bg-green-500 rounded-full hover:bg-green-600 transition-colors"
-                onClick={handleMaximize}
-              ></button>
-            </div>
-            <span className="ml-4 font-medium">
-              {theme === "matrix"
-                ? "PORTFOLIO_API.EXE"
-                : theme === "vscode"
-                  ? "Daniel's API Client"
-                  : "Daniel's Portfolio API"}
-            </span>
-          </div>
+        {/* Toolbar omarchy (los controles de ventana los aporta el window manager) */}
+        <div className={`flex items-center justify-between border-b px-4 py-2 ${getHeaderClasses()}`}>
+          <span className="font-medium">OMARCHY_API · daniel@portfolio</span>
 
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center gap-1">
             <button
-              className={`p-1 rounded transition-colors ${theme === "matrix" ? "hover:bg-green-900" : theme === "vscode" ? "hover:bg-gray-600" : "hover:bg-gray-200"}`}
-              onClick={() => setShowPresentationMode(true)}
+              aria-label="Presentation Mode"
               title="Presentation Mode"
+              className="p-1 transition-colors hover:bg-[var(--omarchy-surface-alt)]"
+              onClick={() => setShowPresentationMode(true)}
             >
-              <Presentation className="w-4 h-4" />
+              <Presentation className="h-4 w-4" />
             </button>
             <button
-              className={`p-1 rounded transition-colors ${theme === "matrix" ? "hover:bg-green-900" : theme === "vscode" ? "hover:bg-gray-600" : "hover:bg-gray-200"}`}
-              onClick={() => setShowMetrics(!showMetrics)}
+              aria-label="Toggle Metrics"
               title="Toggle Metrics"
+              className="p-1 transition-colors hover:bg-[var(--omarchy-surface-alt)]"
+              onClick={() => setShowMetrics(!showMetrics)}
             >
-              <Settings className="w-4 h-4" />
+              <Settings className="h-4 w-4" />
             </button>
             <button
-              className={`p-1 rounded transition-colors ${theme === "matrix" ? "hover:bg-green-900" : theme === "vscode" ? "hover:bg-gray-600" : "hover:bg-gray-200"}`}
-              onClick={() => setShowDeveloperMode(!showDeveloperMode)}
+              aria-label="Developer Mode"
               title="Developer Mode"
+              className="p-1 transition-colors hover:bg-[var(--omarchy-surface-alt)]"
+              onClick={() => setShowDeveloperMode(!showDeveloperMode)}
             >
-              <Code className="w-4 h-4" />
-            </button>
-            <button
-              className={`p-1 rounded transition-colors ${theme === "matrix" ? "hover:bg-green-900" : theme === "vscode" ? "hover:bg-gray-600" : "hover:bg-gray-200"}`}
-              onClick={handleMinimize}
-            >
-              <Minimize2 className="w-4 h-4" />
-            </button>
-            <button
-              className={`p-1 rounded transition-colors ${theme === "matrix" ? "hover:bg-green-900" : theme === "vscode" ? "hover:bg-gray-600" : "hover:bg-gray-200"}`}
-              onClick={handleMaximize}
-            >
-              <Maximize2 className="w-4 h-4" />
-            </button>
-            <button
-              className={`p-1 rounded transition-colors ${theme === "matrix" ? "hover:bg-green-900" : theme === "vscode" ? "hover:bg-gray-600" : "hover:bg-gray-200"}`}
-              onClick={handleClose}
-            >
-              <X className="w-4 h-4" />
+              <Code className="h-4 w-4" />
             </button>
           </div>
         </div>
 
-        <div className="flex h-full">
+        <div className="flex min-h-0 flex-1">
           {/* Sidebar */}
-          <div className={`w-80 border-r flex flex-col ${getSidebarClasses()}`}>
-            <div className="p-4 border-b border-gray-300">
-              <h2 className="font-bold text-lg">API Endpoints</h2>
-              <p className="text-sm opacity-75">Portfolio Backend API v3.0</p>
+          <div className={`flex w-80 flex-col border-r ${getSidebarClasses()}`}>
+            <div className="border-b border-[var(--omarchy-border)] p-4">
+              <h2 className="text-lg font-bold">API Endpoints</h2>
+              <p className="om-muted-text text-sm">Portfolio Backend API v3.0</p>
             </div>
 
-            <div className="flex-1 overflow-y-auto pb-4">
+            <div className="om-scrollbar flex-1 overflow-y-auto pb-4">
               {endpoints.map((endpoint) => {
                 const Icon = endpoint.icon
                 const isActive = activeEndpoint === `${endpoint.method} ${endpoint.path}`
@@ -567,44 +429,28 @@ export function PostmanApp({ onMinimize, onMaximize, onClose, initialSection = "
                 return (
                   <div
                     key={`${endpoint.method} ${endpoint.path}`}
-                    className={`p-3 border-b cursor-pointer transition-colors ${
-                      theme === "matrix"
-                        ? `border-green-800 hover:bg-green-900 ${isActive ? "bg-green-900 border-l-4 border-l-green-400" : ""}`
-                        : theme === "vscode"
-                          ? `border-gray-700 hover:bg-gray-700 ${isActive ? "bg-gray-700 border-l-4 border-l-blue-400" : ""}`
-                          : `border-gray-200 hover:bg-gray-100 ${isActive ? "bg-blue-50 border-l-4 border-l-blue-500" : ""}`
+                    className={`cursor-pointer border-b border-[var(--omarchy-border)] p-3 transition-colors ${
+                      isActive
+                        ? "border-l-4 border-l-[var(--omarchy-accent)] bg-[var(--omarchy-surface-alt)]"
+                        : "hover:bg-[var(--omarchy-surface-alt)]"
                     }`}
                     onClick={() => handleEndpointClick(`${endpoint.method} ${endpoint.path}`)}
                   >
-                    <div className="flex items-center space-x-3">
+                    <div className="flex items-center gap-3">
                       <span
-                        className={`px-2 py-1 text-xs font-bold rounded ${
+                        className={`border px-2 py-1 text-xs font-bold ${
                           endpoint.method === "GET"
-                            ? theme === "matrix"
-                              ? "bg-green-800 text-green-300"
-                              : theme === "vscode"
-                                ? "bg-green-700 text-green-300"
-                                : "bg-green-100 text-green-800"
-                            : endpoint.method === "POST"
-                              ? theme === "matrix"
-                                ? "bg-green-700 text-green-200"
-                                : theme === "vscode"
-                                  ? "bg-orange-700 text-orange-300"
-                                  : "bg-orange-100 text-orange-800"
-                              : theme === "matrix"
-                                ? "bg-green-600 text-green-100"
-                                : theme === "vscode"
-                                  ? "bg-gray-600 text-gray-300"
-                                  : "bg-gray-100 text-gray-800"
+                            ? "border-[var(--omarchy-success)]/40 bg-[var(--omarchy-success)]/15 text-[var(--omarchy-success)]"
+                            : "border-[var(--omarchy-warning)]/40 bg-[var(--omarchy-warning)]/15 text-[var(--omarchy-warning)]"
                         }`}
                       >
                         {endpoint.method}
                       </span>
-                      <Icon className={`w-4 h-4 ${endpoint.color}`} />
+                      <Icon className="om-accent-text h-4 w-4" />
                     </div>
                     <div className="mt-1">
                       <div className="font-medium">{endpoint.path}</div>
-                      <div className="text-sm opacity-75">{endpoint.name}</div>
+                      <div className="om-muted-text text-sm">{endpoint.name}</div>
                     </div>
                   </div>
                 )
@@ -612,13 +458,7 @@ export function PostmanApp({ onMinimize, onMaximize, onClose, initialSection = "
 
               <div className="mt-4 px-3 py-2">
                 <button
-                  className={`w-full px-4 py-2 rounded-lg flex items-center justify-center space-x-2 transition-all duration-200 hover:scale-105 ${
-                    theme === "matrix"
-                      ? "bg-green-600 hover:bg-green-500 text-black font-bold shadow-lg hover:shadow-green-500/25"
-                      : theme === "vscode"
-                        ? "bg-blue-600 hover:bg-blue-500 text-white font-bold shadow-lg hover:shadow-blue-500/25"
-                        : "bg-orange-500 hover:bg-orange-600 text-white font-bold shadow-lg hover:shadow-orange-500/25"
-                  }`}
+                  className="om-accent-bg flex w-full items-center justify-center gap-2 border border-[var(--omarchy-accent)] px-4 py-2 font-bold transition-opacity hover:opacity-90"
                   onClick={() => {
                     const link = document.createElement("a")
                     link.href = "/cv-daniel-gonzalez-pascual.pdf"
@@ -626,7 +466,7 @@ export function PostmanApp({ onMinimize, onMaximize, onClose, initialSection = "
                     link.click()
                   }}
                 >
-                  <Download className="w-4 h-4" />
+                  <Download className="h-4 w-4" />
                   <span>Descargar CV</span>
                 </button>
               </div>
@@ -634,71 +474,33 @@ export function PostmanApp({ onMinimize, onMaximize, onClose, initialSection = "
           </div>
 
           {/* Main content */}
-          <div className="flex-1 flex flex-col">
+          <div className="flex min-w-0 flex-1 flex-col">
             {/* Request bar */}
-            <div
-              className={`border-b p-4 ${theme === "matrix" ? "border-green-800" : theme === "vscode" ? "border-gray-700" : "border-gray-300"}`}
-            >
-              <div className="flex items-center space-x-4">
-                <select
-                  className={`px-3 py-2 border rounded-lg ${
-                    theme === "matrix"
-                      ? "border-green-600 bg-black text-green-400"
-                      : theme === "vscode"
-                        ? "border-gray-600 bg-gray-700 text-gray-100"
-                        : "border-gray-300 bg-white text-gray-900"
-                  }`}
-                >
+            <div className="border-b border-[var(--omarchy-border)] p-4">
+              <div className="flex items-center gap-4">
+                <select className="border border-[var(--omarchy-border)] bg-[var(--omarchy-bg-alt)] px-3 py-2 text-[var(--omarchy-fg)]">
                   <option>{activeEndpoint.split(" ")[0]}</option>
                 </select>
                 <input
                   type="text"
                   value={`https://daniel-portfolio-api.com${activeEndpoint.split(" ")[1]}`}
                   readOnly
-                  className={`flex-1 px-3 py-2 border rounded-lg ${
-                    theme === "matrix"
-                      ? "border-green-600 bg-gray-900 text-green-400"
-                      : theme === "vscode"
-                        ? "border-gray-600 bg-gray-800 text-gray-300"
-                        : "border-gray-300 bg-gray-50 text-gray-900"
-                  }`}
+                  className="flex-1 border border-[var(--omarchy-border)] bg-[var(--omarchy-bg-alt)] px-3 py-2 text-[var(--omarchy-fg)]"
                 />
-                <button
-                  className={`px-6 py-2 rounded-lg flex items-center justify-center space-x-2 transition-colors ${
-                    theme === "matrix"
-                      ? "bg-green-600 hover:bg-green-500 text-black"
-                      : theme === "vscode"
-                        ? "bg-blue-600 hover:bg-blue-500 text-white"
-                        : "bg-blue-500 hover:bg-blue-600 text-white"
-                  }`}
-                >
-                  <Play className="w-4 h-4" />
+                <button className="om-accent-bg flex items-center justify-center gap-2 border border-[var(--omarchy-accent)] px-6 py-2 transition-opacity hover:opacity-90">
+                  <Play className="h-4 w-4" />
                   <span>Send</span>
                 </button>
                 <button
-                  className={`px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors ${
-                    theme === "matrix"
-                      ? "bg-green-700 hover:bg-green-600 text-green-100"
-                      : theme === "vscode"
-                        ? "bg-blue-600 hover:bg-blue-500 text-white"
-                        : "bg-blue-500 hover:bg-blue-600 text-white"
-                  }`}
+                  className="flex items-center gap-2 border border-[var(--omarchy-border)] bg-[var(--omarchy-surface)] px-4 py-2 transition-colors hover:bg-[var(--omarchy-surface-alt)]"
                   onClick={() => setShowPreview(!showPreview)}
                 >
-                  <Eye className="w-4 h-4" />
+                  <Eye className="h-4 w-4" />
                   <span>Preview</span>
                 </button>
               </div>
               {!showPreview && (
-                <div
-                  className={`mt-2 text-sm p-2 rounded border-l-4 ${
-                    theme === "matrix"
-                      ? "bg-green-900 border-green-400 text-green-300"
-                      : theme === "vscode"
-                        ? "bg-blue-900 border-blue-400 text-blue-300"
-                        : "bg-blue-50 border-blue-400 text-blue-700"
-                  }`}
-                >
+                <div className="mt-2 border border-[var(--omarchy-border)] border-l-4 border-l-[var(--omarchy-accent)] bg-[var(--omarchy-surface-alt)] p-2 text-sm">
                   💡 Haz clic en "Preview" para ver la sección del portfolio renderizada
                 </div>
               )}
@@ -706,17 +508,13 @@ export function PostmanApp({ onMinimize, onMaximize, onClose, initialSection = "
 
             <div className="flex flex-1 overflow-hidden">
               {/* Response/Preview */}
-              <div className="flex-1 overflow-y-auto">
+              <div className="om-scrollbar flex-1 overflow-y-auto">
                 <LoadingOverlay isLoading={isLoading}>
                   {showPreview ? (
-                    <div
-                      className={`h-full ${theme === "matrix" ? "bg-gray-900" : theme === "vscode" ? "bg-gray-800" : "bg-gray-50"}`}
-                    >
-                      <div
-                        className={`p-4 border-b ${theme === "matrix" ? "bg-black border-green-800" : theme === "vscode" ? "bg-gray-700 border-gray-600" : "bg-white border-gray-200"}`}
-                      >
+                    <div className="h-full bg-[var(--omarchy-bg)]">
+                      <div className="border-b border-[var(--omarchy-border)] bg-[var(--omarchy-surface)] p-4">
                         <h3 className="font-semibold">Vista Previa - {activeEndpoint}</h3>
-                        <p className="text-sm opacity-75">Renderizado del componente del portfolio</p>
+                        <p className="om-muted-text text-sm">Renderizado del componente del portfolio</p>
                       </div>
                       <div className="p-4">{renderPreviewComponent()}</div>
                     </div>
@@ -724,47 +522,23 @@ export function PostmanApp({ onMinimize, onMaximize, onClose, initialSection = "
                     // Respuesta JSON original
                     <div className="p-4">
                       <div className="mb-4 flex items-center justify-between">
-                        <div className="flex items-center space-x-4">
-                          <span className="text-sm opacity-75">Status:</span>
+                        <div className="flex items-center gap-4">
+                          <span className="om-muted-text text-sm">Status:</span>
                           <span
-                            className={`px-2 py-1 rounded text-sm font-medium ${
+                            className={`border px-2 py-1 text-sm font-medium ${
                               currentData.status === 200
-                                ? theme === "matrix"
-                                  ? "bg-green-800 text-green-300"
-                                  : theme === "vscode"
-                                    ? "bg-green-700 text-green-300"
-                                    : "bg-green-100 text-green-800"
-                                : theme === "matrix"
-                                  ? "bg-red-800 text-red-300"
-                                  : theme === "vscode"
-                                    ? "bg-red-700 text-red-300"
-                                    : "bg-red-100 text-red-800"
+                                ? "border-[var(--omarchy-success)]/40 bg-[var(--omarchy-success)]/15 text-[var(--omarchy-success)]"
+                                : "border-[var(--omarchy-danger)]/40 bg-[var(--omarchy-danger)]/15 text-[var(--omarchy-danger)]"
                             }`}
                           >
                             {currentData.status} {currentData.status === 200 ? "OK" : "Error"}
                           </span>
-                          <span className="text-sm opacity-75">Time: {currentData.responseTime}</span>
+                          <span className="om-muted-text text-sm">Time: {currentData.responseTime}</span>
                         </div>
                       </div>
 
-                      <div
-                        className={`rounded-lg p-4 overflow-x-auto ${
-                          theme === "matrix"
-                            ? "bg-black border border-green-600"
-                            : theme === "vscode"
-                              ? "bg-gray-900 border border-gray-600"
-                              : "bg-gray-900"
-                        }`}
-                      >
-                        <pre
-                          className={`text-sm font-mono whitespace-pre-wrap ${
-                            theme === "matrix"
-                              ? "text-green-400"
-                              : theme === "vscode"
-                                ? "text-green-300"
-                                : "text-green-400"
-                          }`}
-                        >
+                      <div className="overflow-x-auto border border-[var(--omarchy-border)] bg-[var(--omarchy-bg-alt)] p-4">
+                        <pre className="whitespace-pre-wrap font-mono text-sm text-[var(--omarchy-success)]">
                           {JSON.stringify(currentData.data, null, 2)}
                         </pre>
                       </div>
@@ -775,7 +549,7 @@ export function PostmanApp({ onMinimize, onMaximize, onClose, initialSection = "
 
               {/* Metrics Panel */}
               {showMetrics && (
-                <div className="w-80 border-l overflow-y-auto">
+                <div className="w-80 overflow-y-auto border-l border-[var(--omarchy-border)]">
                   <ApiMetrics activeEndpoint={activeEndpoint} />
                 </div>
               )}

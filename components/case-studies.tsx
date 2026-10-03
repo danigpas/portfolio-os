@@ -101,8 +101,8 @@ export function CaseStudies() {
             <div className="grid grid-cols-3 gap-4 mb-4">
               {study.metrics.map((metric, index) => (
                 <div key={index} className="text-center p-3 bg-gray-50 rounded-lg">
-                  <metric.icon className="w-5 h-5 mx-auto mb-1 text-orange-500" />
-                  <div className="text-2xl font-bold text-orange-600">{metric.value}</div>
+                  <metric.icon className="w-5 h-5 mx-auto mb-1 text-[var(--omarchy-accent)]" />
+                  <div className="text-2xl font-bold text-[var(--omarchy-accent)]">{metric.value}</div>
                   <div className="text-xs text-gray-600">{metric.label}</div>
                 </div>
               ))}
