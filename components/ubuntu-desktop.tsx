@@ -105,12 +105,12 @@ export function UbuntuDesktop({
 
   const desktopIcons = [
     { id: "cv", icon: Download, label: "CV.pdf", action: handleDownloadCV },
-    { id: "github", icon: Github, label: "GitHub", action: () => handleExternalLink("https://github.com/danielgonzalezpascual") },
+    { id: "github", icon: Github, label: "GitHub", action: () => handleExternalLink("https://github.com/danigpas") },
     {
       id: "linkedin",
       icon: Linkedin,
       label: "LinkedIn",
-      action: () => handleExternalLink("https://linkedin.com/in/daniel-gonzalez-pascual"),
+      action: () => handleExternalLink("https://www.linkedin.com/in/daniel-gonz%C3%A1lez-pascual-dev/"),
     },
   ]
 

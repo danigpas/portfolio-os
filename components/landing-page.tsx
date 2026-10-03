@@ -248,7 +248,7 @@ export function LandingPage() {
                   rel="noopener noreferrer"
                   className="text-[#7ee787] hover:underline"
                 >
-                  danielgonzalezpascual
+                  danigpas
                 </a>
               </li>
               <li>

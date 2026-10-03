@@ -103,8 +103,8 @@ export const DEFAULT_LANGUAGE: Language = "es"
 const contact = {
   email: "danigpascual@protonmail.com",
   location: "Málaga, España",
-  github: "https://github.com/danielgonzalezpascual",
-  linkedin: "https://linkedin.com/in/daniel-gonzalez-pascual",
+  github: "https://github.com/danigpas",
+  linkedin: "https://www.linkedin.com/in/daniel-gonz%C3%A1lez-pascual-dev/",
   website: "https://danigpascual.dev",
   cvPath: "/cv-daniel-gonzalez-pascual.pdf",
 } as const
@@ -235,7 +235,7 @@ export const cvData: Record<Language, CVData> = {
           "Este portfolio: landing SSR con SEO y un escritorio tipo Omarchy navegable, construido con Next.js 15, React 19 y Tailwind v4.",
         stack: ["Next.js", "React", "TypeScript", "Tailwind CSS"],
         url: "https://danigpascual.dev",
-        repo: "https://github.com/danielgonzalezpascual",
+        repo: "https://github.com/danigpas",
         image: "/modern-blog-interface.png",
         featured: true,
         type: "Portfolio personal",
@@ -406,7 +406,7 @@ export const cvData: Record<Language, CVData> = {
           "This portfolio: an SSR landing with SEO and a navigable Omarchy-style desktop, built with Next.js 15, React 19 and Tailwind v4.",
         stack: ["Next.js", "React", "TypeScript", "Tailwind CSS"],
         url: "https://danigpascual.dev",
-        repo: "https://github.com/danielgonzalezpascual",
+        repo: "https://github.com/danigpas",
         image: "/modern-blog-interface.png",
         featured: true,
         type: "Personal portfolio",
