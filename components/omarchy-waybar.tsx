@@ -8,12 +8,15 @@ import {
   Mail,
   Power,
   RotateCcw,
+  Server,
+  ServerOff,
   TerminalSquare,
   User,
   Wifi,
   WifiOff,
 } from "lucide-react"
 import { ThemeSelector } from "@/components/theme-system"
+import { usePortfolioData } from "@/components/portfolio-data-provider"
 
 export interface WaybarProps {
   activeSection: string
@@ -40,6 +43,7 @@ function Separator() {
 }
 
 export function Waybar({ activeSection, onSectionChange, onOpenTerminal, onReboot, onShutdown }: WaybarProps) {
+  const { backendOnline } = usePortfolioData()
   const [time, setTime] = useState<Date | null>(null)
   const [online, setOnline] = useState(true)
 
@@ -110,6 +114,26 @@ export function Waybar({ activeSection, onSectionChange, onOpenTerminal, onReboo
         <div className="flex items-center gap-1" title={online ? "Red disponible" : "Sin conexión"}>
           {online ? <Wifi className="h-3 w-3 om-accent-text" /> : <WifiOff className="h-3 w-3 text-[var(--omarchy-danger)]" />}
           <span className="hidden sm:inline">{online ? "online" : "offline"}</span>
+        </div>
+        <Separator />
+        <div
+          className="flex items-center gap-1"
+          title={
+            backendOnline === null
+              ? "Consultando la API del portfolio…"
+              : backendOnline
+                ? "Backend FastAPI disponible"
+                : "Backend FastAPI no disponible (datos locales)"
+          }
+        >
+          {backendOnline === false ? (
+            <ServerOff className="h-3 w-3 text-[var(--omarchy-danger)]" aria-hidden="true" />
+          ) : (
+            <Server className={`h-3 w-3 ${backendOnline ? "om-accent-text" : "text-[var(--omarchy-muted)]"}`} aria-hidden="true" />
+          )}
+          <span className="hidden sm:inline">
+            {backendOnline === null ? "api…" : backendOnline ? "api:up" : "api:down"}
+          </span>
         </div>
         <Separator />
         <span className="tabular-nums" suppressHydrationWarning>

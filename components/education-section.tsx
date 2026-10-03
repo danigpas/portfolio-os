@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { GraduationCap, Calendar, BookOpen } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
-import { getCvData } from "@/lib/cv-data"
+import { useCvData } from "@/components/portfolio-data-provider"
 
 interface EducationPresentation {
   /** Icono de la tarjeta; si falta se muestra `label`. */
@@ -64,8 +64,8 @@ const DEFAULT_PRESENTATION: EducationPresentation = EDUCATION_PRESENTATION.cesur
 const TAG_BADGE_CLASS = "bg-secondary/50 text-secondary-foreground hover:bg-secondary/70"
 
 export function EducationSection() {
-  const { t, language } = useLanguage()
-  const { education } = getCvData(language)
+  const { t } = useLanguage()
+  const { education } = useCvData()
 
   return (
     <section id="education" className="py-20 bg-gradient-to-br from-background via-secondary/5 to-accent/10">

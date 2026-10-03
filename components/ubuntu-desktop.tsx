@@ -16,6 +16,8 @@ import {
 import gsap from "gsap"
 import { Waybar } from "@/components/omarchy-waybar"
 import { OmarchyWallpaper } from "@/components/omarchy-wallpaper"
+import { useCvData } from "@/components/portfolio-data-provider"
+import { downloadCv } from "@/lib/api"
 import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion"
 
 interface UbuntuDesktopProps {
@@ -54,6 +56,7 @@ export function UbuntuDesktop({
   onCloseTerminal,
 }: UbuntuDesktopProps) {
   const reducedMotion = usePrefersReducedMotion()
+  const cv = useCvData()
   const dockRefs = useRef<Array<HTMLButtonElement | null>>([])
   const iconRefs = useRef<Array<HTMLButtonElement | null>>([])
 
@@ -97,10 +100,7 @@ export function UbuntuDesktop({
   }
 
   const handleDownloadCV = () => {
-    const link = document.createElement("a")
-    link.href = "/cv-daniel-gonzalez-pascual.pdf"
-    link.download = "CV-Daniel-Gonzalez-Pascual.pdf"
-    link.click()
+    void downloadCv(cv.contact.cvPath)
   }
 
   const desktopIcons = [

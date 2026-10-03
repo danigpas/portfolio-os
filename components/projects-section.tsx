@@ -4,11 +4,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ExternalLink, Github } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
-import { getCvData } from "@/lib/cv-data"
+import { useCvData } from "@/components/portfolio-data-provider"
 
 export function ProjectsSection() {
   const { t, language } = useLanguage()
-  const { projects } = getCvData(language)
+  const { projects } = useCvData()
 
   return (
     <section id="projects" className="py-20 bg-gradient-to-br from-accent/10 via-background to-secondary/20">

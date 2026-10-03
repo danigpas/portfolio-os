@@ -6,8 +6,8 @@ import { UbuntuDesktop } from "@/components/ubuntu-desktop"
 import { PostmanApp } from "@/components/postman-app"
 import { Terminal } from "@/components/terminal"
 import { useTheme, isOmarchyTheme } from "@/components/theme-system"
-import { useLanguage } from "@/components/language-provider"
-import { getCvData } from "@/lib/cv-data"
+import { useCvData, PortfolioDataProvider } from "@/components/portfolio-data-provider"
+import { downloadCv as downloadCvFromApi } from "@/lib/api"
 import { APP_NAMES, SECTION_BY_APP, THEME_OPTIONS } from "@/lib/omarchy-config"
 import { RofiLauncher, type RofiCommand } from "@/components/rofi-launcher"
 import {
@@ -29,17 +29,18 @@ const TERMINAL_TITLE = "daniel@portfolio: ~"
  */
 export function DesktopSession() {
   return (
-    <WindowManagerProvider>
-      <DesktopSessionInner />
-    </WindowManagerProvider>
+    <PortfolioDataProvider>
+      <WindowManagerProvider>
+        <DesktopSessionInner />
+      </WindowManagerProvider>
+    </PortfolioDataProvider>
   )
 }
 
 function DesktopSessionInner() {
   const { openWindow, closeAllWindows } = useWindows()
   const { theme, setTheme } = useTheme()
-  const { language } = useLanguage()
-  const cv = useMemo(() => getCvData(language), [language])
+  const cv = useCvData()
 
   const [activeSection, setActiveSection] = useState("GET /about")
   const [isSuspended, setIsSuspended] = useState(false)
@@ -60,11 +61,7 @@ function DesktopSessionInner() {
   )
 
   const downloadCv = useCallback(() => {
-    const link = document.createElement("a")
-    link.href = cv.contact.cvPath
-    link.download = "CV-Daniel-Gonzalez-Pascual.pdf"
-    link.rel = "noopener"
-    link.click()
+    void downloadCvFromApi(cv.contact.cvPath)
   }, [cv.contact.cvPath])
 
   const openPostman = useCallback(
