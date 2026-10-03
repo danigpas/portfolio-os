@@ -1,133 +1,191 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { useLanguage } from "@/components/language-provider"
+import { useCallback, useEffect, useRef, useState } from "react"
+import gsap from "gsap"
 
 interface BootAnimationProps {
   onComplete: () => void
 }
 
+/** Total boot budget in seconds (acceptance: complete boot ≤ 3.5s). */
+const BOOT_SECONDS = 2.5
+
+const BOOT_LINES = [
+  "[ OK ] Reached target Basic System.",
+  "[ OK ] Mounted /dev/portfolio.",
+  "[ OK ] Started udev Kernel Device Manager.",
+  "[ OK ] Started portfolio-manager.service.",
+  "[ OK ] Started daniel-gonzalez-pascual.service.",
+  "[ OK ] Started python-fastapi.service.",
+  "[ OK ] Started postgresql.service.",
+  "[ OK ] Started omarchy-theme.service.",
+  "[ OK ] Started waybar.service.",
+  "[ OK ] Started NetworkManager.service.",
+  "[ OK ] Loaded lib/cv-data.ts (ES/EN).",
+  "[ OK ] Activated graphical target.",
+  "[ OK ] Started Omarchy Session.",
+  "[ OK ] Reached target Graphical Interface.",
+]
+
+const BAR_WIDTH = 24
+
+function renderBar(progress: number) {
+  const filled = Math.round((progress / 100) * BAR_WIDTH)
+  return `${"█".repeat(filled)}${"░".repeat(BAR_WIDTH - filled)}`
+}
+
 export function BootAnimation({ onComplete }: BootAnimationProps) {
-  const { t } = useLanguage()
-  const [currentStep, setCurrentStep] = useState(0)
-  const [loadingText, setLoadingText] = useState("")
+  const rootRef = useRef<HTMLDivElement>(null)
+  const linesRef = useRef<Array<HTMLDivElement | null>>([])
+  const promptRef = useRef<HTMLDivElement>(null)
+  const timelineRef = useRef<gsap.core.Timeline | null>(null)
+  const completedRef = useRef(false)
+  const [progress, setProgress] = useState(0)
 
-  const bootSteps = [
-    { text: "Inicializando kernel...", duration: 350 },
-    { text: "Montando /dev/portfolio...", duration: 350 },
-    { text: "Cargando perfil de Daniel González Pascual", duration: 450 },
-    { text: "Desarrollador Backend Python", duration: 350 },
-    { text: "Arrancando servicios...", duration: 350 },
-    { text: "Sistema listo ✓", duration: 350 },
-  ]
-
-  useEffect(() => {
-    if (currentStep < bootSteps.length) {
-      const timer = setTimeout(
-        () => {
-          setLoadingText(bootSteps[currentStep].text)
-          setCurrentStep((prev) => prev + 1)
-        },
-        currentStep === 0 ? 200 : bootSteps[currentStep - 1]?.duration || 350,
-      )
-
-      return () => clearTimeout(timer)
-    } else {
-      const completeTimer = setTimeout(onComplete, 250)
-      return () => clearTimeout(completeTimer)
-    }
-  }, [currentStep, onComplete])
-
-  // Boot saltable: ESC, Enter, Espacio o click. T3 rediseñará la animación a fondo.
-  useEffect(() => {
-    const skip = (event: KeyboardEvent) => {
-      if (event.key === "Escape" || event.key === "Enter" || event.key === " ") {
-        onComplete()
-      }
-    }
-    window.addEventListener("keydown", skip)
-    return () => window.removeEventListener("keydown", skip)
+  const finish = useCallback(() => {
+    if (completedRef.current) return
+    completedRef.current = true
+    timelineRef.current?.kill()
+    onComplete()
   }, [onComplete])
+
+  useEffect(() => {
+    const reducedMotion =
+      typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    const lines = linesRef.current.filter(Boolean) as HTMLDivElement[]
+
+    if (reducedMotion) {
+      gsap.set(lines, { autoAlpha: 1, x: 0 })
+      if (promptRef.current) gsap.set(promptRef.current, { autoAlpha: 1 })
+      setProgress(100)
+      const fast = window.setTimeout(finish, 350)
+      return () => window.clearTimeout(fast)
+    }
+
+    const counter = { value: 0 }
+    const stagger = (BOOT_SECONDS - 0.4) / BOOT_LINES.length
+
+    const tl = gsap.timeline({ onComplete: finish })
+
+    tl.fromTo(
+      lines,
+      { autoAlpha: 0, x: -10 },
+      {
+        autoAlpha: 1,
+        x: 0,
+        duration: 0.12,
+        ease: "none",
+        stagger,
+      },
+      0,
+    )
+
+    tl.to(
+      counter,
+      {
+        value: 100,
+        duration: BOOT_SECONDS - 0.3,
+        ease: "none",
+        onUpdate: () => {
+          const value = Math.round(counter.value)
+          setProgress(value)
+        },
+      },
+      0,
+    )
+
+    tl.fromTo(
+      promptRef.current,
+      { autoAlpha: 0 },
+      { autoAlpha: 1, duration: 0.2 },
+      BOOT_SECONDS - 0.45,
+    )
+
+    // Pad the timeline so the total is exactly BOOT_SECONDS.
+    tl.to({}, { duration: 0.0001 }, BOOT_SECONDS)
+
+    timelineRef.current = tl
+
+    // Safety net: never trap the user if GSAP fails to tick.
+    const fallback = window.setTimeout(finish, (BOOT_SECONDS + 0.3) * 1000)
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") finish()
+    }
+    window.addEventListener("keydown", onKeyDown)
+
+    return () => {
+      window.clearTimeout(fallback)
+      window.removeEventListener("keydown", onKeyDown)
+      tl.kill()
+    }
+  }, [finish])
 
   return (
     <div
-      className="fixed inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-800 flex items-center justify-center overflow-hidden cursor-pointer"
-      onClick={onComplete}
-      role="presentation"
+      ref={rootRef}
+      role="button"
+      tabIndex={0}
+      aria-label="Arranque de Omarchy. Pulsa Escape o haz clic para saltar."
+      onClick={finish}
+      onKeyDown={(event) => {
+        if (event.key === "Escape" || event.key === "Enter" || event.key === " ") {
+          event.preventDefault()
+          finish()
+        }
+      }}
+      className="fixed inset-0 z-[200] cursor-pointer overflow-hidden bg-[var(--omarchy-bg)] font-mono text-[var(--omarchy-fg)] outline-none"
     >
-      {/* Matrix-style background */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="matrix-rain"></div>
+      {/* subtle tty backdrop */}
+      <div className="om-wallpaper" aria-hidden>
+        <div className="om-wallpaper-pattern" />
+        <div className="om-wallpaper-scanlines" />
       </div>
 
-      <div className="text-center z-10">
-        {/* Logo con foto de Daniel - diseño más moderno */}
-        <div className="mb-8 relative">
-          <div className="relative w-40 h-40 mx-auto">
-            {/* Hexágono exterior animado */}
-            <div className="absolute inset-0 hexagon-border animate-pulse">
-              <div className="hexagon-inner bg-gradient-to-br from-orange-500 to-orange-600 p-1">
-                <div className="hexagon-content bg-black p-2">
-                  <img
-                    src="/daniel-gonzalez-pascual-portrait.png"
-                    alt="Daniel González Pascual"
-                    className="w-full h-full object-cover hexagon-image"
-                  />
-                </div>
+      <div className="relative z-10 mx-auto flex h-full w-full max-w-3xl flex-col justify-center px-6 py-10 text-[13px] leading-relaxed sm:text-sm">
+        <div className="mb-4 border-b border-[var(--omarchy-border)] pb-2 text-[var(--omarchy-accent)]">
+          Omarchy 1.0 · tty1 · boot
+        </div>
+
+        <div className="min-h-[16rem] space-y-0.5">
+          {BOOT_LINES.map((line, index) => {
+            const ok = line.match(/^\[ OK \]/)
+            const rest = ok ? line.replace("[ OK ] ", "") : line
+            return (
+              <div
+                key={line}
+                ref={(el) => {
+                  linesRef.current[index] = el
+                }}
+                className="whitespace-pre"
+                style={{ opacity: 0 }}
+              >
+                {ok ? (
+                  <>
+                    <span className="text-[var(--omarchy-success)]">[ OK ]</span> {rest}
+                  </>
+                ) : (
+                  line
+                )}
               </div>
-            </div>
+            )
+          })}
+        </div>
 
-            {/* Anillos de carga modernos */}
-            <div className="absolute inset-0 animate-spin-slow">
-              <div className="w-full h-full border-4 border-transparent border-t-orange-500 border-r-orange-400 rounded-full opacity-80"></div>
-            </div>
-            <div className="absolute inset-2 animate-spin-reverse">
-              <div className="w-full h-full border-2 border-transparent border-b-orange-300 border-l-orange-200 rounded-full opacity-60"></div>
-            </div>
+        <div className="mt-6 space-y-1">
+          <div className="text-[var(--omarchy-accent)]">
+            <span className="om-muted-text">progress </span>[{renderBar(progress)}] {progress}%
+          </div>
+          <div ref={promptRef} className="text-[var(--omarchy-fg)]" style={{ opacity: 0 }}>
+            <span className="text-[var(--omarchy-accent)]">omarchy</span>
+            <span className="om-muted-text"> login: </span>daniel
+            <span className="ml-1 inline-block animate-pulse text-[var(--omarchy-accent)]">█</span>
           </div>
         </div>
 
-        {/* Texto de carga */}
-        <div className="text-orange-400 text-2xl font-mono mb-6 h-10 flex items-center justify-center">
-          <span className="animate-pulse">{loadingText}</span>
-        </div>
-
-        {/* Barra de progreso moderna */}
-        <div className="w-96 h-3 bg-gray-800 rounded-full mx-auto overflow-hidden border border-gray-700">
-          <div
-            className="h-full bg-gradient-to-r from-orange-500 via-orange-400 to-orange-300 transition-all duration-1000 ease-out relative"
-            style={{ width: `${(currentStep / bootSteps.length) * 100}%` }}
-          >
-            <div className="absolute inset-0 bg-white opacity-30 animate-pulse"></div>
-          </div>
-        </div>
-
-        {/* Indicadores de sistema */}
-        <div className="mt-10 text-green-400 font-mono text-sm space-y-2">
-          <div className="flex justify-center space-x-6">
-            <span
-              className={`transition-all duration-500 ${currentStep > 0 ? "text-green-400 animate-pulse" : "text-gray-600"}`}
-            >
-              ● KERNEL
-            </span>
-            <span
-              className={`transition-all duration-500 ${currentStep > 2 ? "text-green-400 animate-pulse" : "text-gray-600"}`}
-            >
-              ● USER
-            </span>
-            <span
-              className={`transition-all duration-500 ${currentStep > 4 ? "text-green-400 animate-pulse" : "text-gray-600"}`}
-            >
-              ● SERVICES
-            </span>
-            <span
-              className={`transition-all duration-500 ${currentStep > 6 ? "text-green-400 animate-pulse" : "text-gray-600"}`}
-            >
-              ● READY
-            </span>
-          </div>
-        </div>
-        <p className="mt-6 text-xs font-mono text-gray-500">Pulsa ESC o haz click para saltar</p>
+        <p className="mt-10 text-xs text-[var(--omarchy-muted)]">
+          Pulsa <kbd className="border border-[var(--omarchy-border)] px-1">ESC</kbd> o haz clic para saltar
+        </p>
       </div>
     </div>
   )
