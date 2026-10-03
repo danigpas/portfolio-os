@@ -13,13 +13,12 @@ export function BootAnimation({ onComplete }: BootAnimationProps) {
   const [loadingText, setLoadingText] = useState("")
 
   const bootSteps = [
-    { text: "Inicializando sistema...", duration: 2000 },
-    { text: "Cargando perfil de desarrollador...", duration: 2500 },
-    { text: "Daniel González Pascual", duration: 2800 },
-    { text: "Desarrollador Backend Python", duration: 2200 },
-    { text: "Pasión por la innovación", duration: 2200 },
-    { text: "Transformando ideas en código eficiente", duration: 2500 },
-    { text: "Sistema listo ✓", duration: 1500 },
+    { text: "Inicializando kernel...", duration: 350 },
+    { text: "Montando /dev/portfolio...", duration: 350 },
+    { text: "Cargando perfil de Daniel González Pascual", duration: 450 },
+    { text: "Desarrollador Backend Python", duration: 350 },
+    { text: "Arrancando servicios...", duration: 350 },
+    { text: "Sistema listo ✓", duration: 350 },
   ]
 
   useEffect(() => {
@@ -29,18 +28,33 @@ export function BootAnimation({ onComplete }: BootAnimationProps) {
           setLoadingText(bootSteps[currentStep].text)
           setCurrentStep((prev) => prev + 1)
         },
-        currentStep === 0 ? 800 : bootSteps[currentStep - 1]?.duration || 2000,
+        currentStep === 0 ? 200 : bootSteps[currentStep - 1]?.duration || 350,
       )
 
       return () => clearTimeout(timer)
     } else {
-      const completeTimer = setTimeout(onComplete, 2000)
+      const completeTimer = setTimeout(onComplete, 250)
       return () => clearTimeout(completeTimer)
     }
   }, [currentStep, onComplete])
 
+  // Boot saltable: ESC, Enter, Espacio o click. T3 rediseñará la animación a fondo.
+  useEffect(() => {
+    const skip = (event: KeyboardEvent) => {
+      if (event.key === "Escape" || event.key === "Enter" || event.key === " ") {
+        onComplete()
+      }
+    }
+    window.addEventListener("keydown", skip)
+    return () => window.removeEventListener("keydown", skip)
+  }, [onComplete])
+
   return (
-    <div className="fixed inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-800 flex items-center justify-center overflow-hidden">
+    <div
+      className="fixed inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-800 flex items-center justify-center overflow-hidden cursor-pointer"
+      onClick={onComplete}
+      role="presentation"
+    >
       {/* Matrix-style background */}
       <div className="absolute inset-0 opacity-10">
         <div className="matrix-rain"></div>
@@ -113,6 +127,7 @@ export function BootAnimation({ onComplete }: BootAnimationProps) {
             </span>
           </div>
         </div>
+        <p className="mt-6 text-xs font-mono text-gray-500">Pulsa ESC o haz click para saltar</p>
       </div>
     </div>
   )

@@ -1,9 +1,10 @@
 import type React from "react"
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import { Montserrat, Open_Sans, JetBrains_Mono } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-system"
 import { LanguageProvider } from "@/components/language-provider"
+import { getCvData } from "@/lib/cv-data"
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -26,19 +27,68 @@ const jetbrainsMono = JetBrains_Mono({
   weight: ["400", "500", "600"],
 })
 
+const siteUrl = "https://danigpascual.dev"
+const cv = getCvData("es")
+
 export const metadata: Metadata = {
-  title: "Daniel González Pascual - Portfolio API",
-  description:
-    "Portfolio interactivo de Daniel González Pascual, desarrollador backend Python. Experiencia única tipo Postman API.",
-  generator: "v0.app",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: cv.meta.title,
+    template: "%s | Daniel González Pascual",
+  },
+  description: cv.meta.description,
+  keywords: cv.meta.keywords,
+  authors: [{ name: cv.about.name, url: siteUrl }],
+  creator: cv.about.name,
+  applicationName: "Daniel González Pascual - Portfolio",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    locale: "es_ES",
+    url: "/",
+    siteName: "Daniel González Pascual - Portfolio",
+    title: cv.meta.title,
+    description: cv.meta.description,
+    images: [
+      {
+        url: "/daniel-gonzalez-pascual-portrait.png",
+        width: 1024,
+        height: 1024,
+        alt: "Daniel González Pascual, desarrollador backend Python",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: cv.meta.title,
+    description: cv.meta.description,
+    images: ["/daniel-gonzalez-pascual-portrait.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   manifest: "/manifest.json",
-  themeColor: "#f97316",
-  viewport: "width=device-width, initial-scale=1, maximum-scale=1",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
     title: "Daniel Portfolio",
   },
+}
+
+export const viewport: Viewport = {
+  themeColor: "#0b0b0c",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
 }
 
 export default function RootLayout({
@@ -48,18 +98,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" suppressHydrationWarning>
-      <head>
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="Daniel Portfolio" />
-        <style>{`
-html {
-  font-family: ${openSans.style.fontFamily};
-}
-        `}</style>
-      </head>
       <body className={`${montserrat.variable} ${openSans.variable} ${jetbrainsMono.variable} antialiased`}>
         <ThemeProvider>
           <LanguageProvider>{children}</LanguageProvider>
