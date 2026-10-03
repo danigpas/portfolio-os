@@ -60,6 +60,13 @@ export function UbuntuDesktop({ children, onSectionChange, onReboot, onSuspend, 
     link.click()
   }
 
+  const activateOnKey = (handler: () => void) => (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault()
+      handler()
+    }
+  }
+
   const dockItems = [
     {
       id: "about",
@@ -227,12 +234,12 @@ export function UbuntuDesktop({ children, onSectionChange, onReboot, onSuspend, 
             <Clock className="w-3 h-3" />
             <span>{currentTime.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" })}</span>
           </div>
-          <div className="flex items-center space-x-2 cursor-pointer" onClick={onReboot}>
-            <Power className="w-4 h-4" />
+          <div className="flex items-center space-x-2 cursor-pointer" role="button" tabIndex={0} aria-label="Reiniciar el sistema" onClick={onReboot} onKeyDown={activateOnKey(() => onReboot?.())}>
+            <Power className="w-4 h-4" aria-hidden="true" />
             <span>Reboot</span>
           </div>
-          <div className="flex items-center space-x-2 cursor-pointer" onClick={onShutdown}>
-            <Power className="w-4 h-4 text-red-500" />
+          <div className="flex items-center space-x-2 cursor-pointer" role="button" tabIndex={0} aria-label="Apagar el sistema" onClick={onShutdown} onKeyDown={activateOnKey(() => onShutdown?.())}>
+            <Power className="w-4 h-4 text-red-500" aria-hidden="true" />
             <span>Shutdown</span>
           </div>
           <div
@@ -248,6 +255,9 @@ export function UbuntuDesktop({ children, onSectionChange, onReboot, onSuspend, 
           return (
             <div
               key={item.id}
+              role="button"
+              tabIndex={0}
+              aria-label={`Abrir ${item.label}`}
               className={`flex flex-col items-center space-y-1 cursor-pointer hover:bg-white/10 p-2 rounded transition-all duration-200 ${
                 theme === "matrix" ? "text-green-400" : theme === "vscode" ? "text-gray-100" : "text-white"
               }`}
@@ -255,11 +265,15 @@ export function UbuntuDesktop({ children, onSectionChange, onReboot, onSuspend, 
                   if (onOpenPostmanApp) onOpenPostmanApp()
                   handleSectionClick(item.endpoint)
                 }}
+              onKeyDown={activateOnKey(() => {
+                if (onOpenPostmanApp) onOpenPostmanApp()
+                handleSectionClick(item.endpoint)
+              })}
             >
               <div
                 className={`w-12 h-12 ${item.color} rounded-lg flex items-center justify-center hover:scale-110 transition-transform shadow-lg`}
               >
-                <Icon className="w-6 h-6 text-white" />
+                <Icon className="w-6 h-6 text-white" aria-hidden="true" />
               </div>
               <span className="text-xs text-center">{item.label}</span>
             </div>
@@ -273,15 +287,19 @@ export function UbuntuDesktop({ children, onSectionChange, onReboot, onSuspend, 
           return (
             <div
               key={item.id}
+              role="button"
+              tabIndex={0}
+              aria-label={item.label}
               className={`flex flex-col items-center space-y-1 cursor-pointer hover:bg-white/10 p-2 rounded transition-all duration-200 group ${
                 theme === "matrix" ? "text-green-400" : theme === "vscode" ? "text-gray-100" : "text-white"
               }`}
               onClick={item.action}
+              onKeyDown={activateOnKey(item.action)}
             >
               <div
                 className={`w-12 h-12 ${item.color} rounded-lg flex items-center justify-center hover:scale-110 transition-transform shadow-lg hover:shadow-xl`}
               >
-                <Icon className="w-6 h-6 text-white" />
+                <Icon className="w-6 h-6 text-white" aria-hidden="true" />
               </div>
               <span
                 className={`text-xs text-center transition-colors ${
@@ -309,11 +327,15 @@ export function UbuntuDesktop({ children, onSectionChange, onReboot, onSuspend, 
             return (
               <div
                 key={item.id}
+                role="button"
+                tabIndex={0}
+                aria-label={`Abrir ${item.label}`}
                 className={`w-10 h-10 ${item.color} rounded-lg flex items-center justify-center cursor-pointer hover:scale-110 transition-transform group relative`}
                 onClick={() => handleSectionClick(item.endpoint)}
+                onKeyDown={activateOnKey(() => handleSectionClick(item.endpoint))}
                 title={item.label}
               >
-                <Icon className="w-5 h-5 text-white" />
+                <Icon className="w-5 h-5 text-white" aria-hidden="true" />
 
                 {/* Tooltip */}
                 <div

@@ -2,9 +2,6 @@
 
 import { useState, useEffect } from "react"
 import {
-  X,
-  Minimize2,
-  Maximize2,
   Play,
   User,
   Briefcase,
@@ -44,17 +41,13 @@ import { ApiMetrics } from "@/components/api-metrics"
 import { DeveloperMode } from "@/components/developer-mode"
 
 interface PostmanAppProps {
-  onMinimize?: () => void
-  onMaximize?: () => void
-  onClose?: () => void
   initialSection?: string
 }
 
-export function PostmanApp({ onMinimize, onMaximize, onClose, initialSection = "GET /about" }: PostmanAppProps) {
+export function PostmanApp({ initialSection = "GET /about" }: PostmanAppProps) {
   const { t, language } = useLanguage()
   const { theme, getAppClasses } = useTheme()
   const [activeEndpoint, setActiveEndpoint] = useState(initialSection)
-  const [isMaximized, setIsMaximized] = useState(false)
   const [showPreview, setShowPreview] = useState(false)
   const [showMetrics, setShowMetrics] = useState(false)
   const [showDeveloperMode, setShowDeveloperMode] = useState(false)
@@ -365,19 +358,6 @@ export function PostmanApp({ onMinimize, onMaximize, onClose, initialSection = "
 
   const currentData = getEndpointData(activeEndpoint)
 
-  const handleMinimize = () => {
-    if (onMinimize) onMinimize()
-  }
-
-  const handleMaximize = () => {
-    setIsMaximized(!isMaximized)
-    if (onMaximize) onMaximize()
-  }
-
-  const handleClose = () => {
-    if (onClose) onClose()
-  }
-
   const getWindowClasses = () => {
     switch (theme) {
       case "matrix":
@@ -413,80 +393,48 @@ export function PostmanApp({ onMinimize, onMaximize, onClose, initialSection = "
 
   return (
     <>
-      <div
-        className={`absolute ${isMaximized ? "inset-8 z-40" : "top-16 left-1/2 transform -translate-x-1/2 w-[90%] max-w-6xl h-[90%] z-30"} rounded-lg shadow-2xl border overflow-hidden transition-all duration-300 ${getWindowClasses()}`}
-      >
-        {/* Window controls */}
-        <div className={`border-b px-4 py-2 flex items-center justify-between ${getHeaderClasses()}`}>
-          <div className="flex items-center space-x-2">
-            <div className="flex space-x-2">
-              <button
-                className="w-3 h-3 bg-red-500 rounded-full hover:bg-red-600 transition-colors"
-                onClick={handleClose}
-              ></button>
-              <button
-                className="w-3 h-3 bg-yellow-500 rounded-full hover:bg-yellow-600 transition-colors"
-                onClick={handleMinimize}
-              ></button>
-              <button
-                className="w-3 h-3 bg-green-500 rounded-full hover:bg-green-600 transition-colors"
-                onClick={handleMaximize}
-              ></button>
-            </div>
-            <span className="ml-4 font-medium">
-              {theme === "matrix"
-                ? "PORTFOLIO_API.EXE"
-                : theme === "vscode"
-                  ? "Daniel's API Client"
-                  : "Daniel's Portfolio API"}
-            </span>
-          </div>
+      <div className={`flex h-full flex-col ${getWindowClasses()}`}>
+        {/* Toolbar de la app (los controles de ventana los aporta el window manager) */}
+        <div className={`flex items-center justify-between border-b px-4 py-2 ${getHeaderClasses()}`}>
+          <span className="font-medium">
+            {theme === "matrix"
+              ? "PORTFOLIO_API.EXE"
+              : theme === "vscode"
+                ? "Daniel's API Client"
+                : "Daniel's Portfolio API"}
+          </span>
 
           <div className="flex items-center space-x-2">
             <button
               className={`p-1 rounded transition-colors ${theme === "matrix" ? "hover:bg-green-900" : theme === "vscode" ? "hover:bg-gray-600" : "hover:bg-gray-200"}`}
               onClick={() => setShowPresentationMode(true)}
               title="Presentation Mode"
+              aria-label="Abrir modo presentación"
             >
-              <Presentation className="w-4 h-4" />
+              <Presentation className="w-4 h-4" aria-hidden="true" />
             </button>
             <button
               className={`p-1 rounded transition-colors ${theme === "matrix" ? "hover:bg-green-900" : theme === "vscode" ? "hover:bg-gray-600" : "hover:bg-gray-200"}`}
               onClick={() => setShowMetrics(!showMetrics)}
               title="Toggle Metrics"
+              aria-label="Alternar métricas"
+              aria-pressed={showMetrics}
             >
-              <Settings className="w-4 h-4" />
+              <Settings className="w-4 h-4" aria-hidden="true" />
             </button>
             <button
               className={`p-1 rounded transition-colors ${theme === "matrix" ? "hover:bg-green-900" : theme === "vscode" ? "hover:bg-gray-600" : "hover:bg-gray-200"}`}
               onClick={() => setShowDeveloperMode(!showDeveloperMode)}
               title="Developer Mode"
+              aria-label="Alternar modo desarrollador"
+              aria-pressed={showDeveloperMode}
             >
-              <Code className="w-4 h-4" />
-            </button>
-            <button
-              className={`p-1 rounded transition-colors ${theme === "matrix" ? "hover:bg-green-900" : theme === "vscode" ? "hover:bg-gray-600" : "hover:bg-gray-200"}`}
-              onClick={handleMinimize}
-            >
-              <Minimize2 className="w-4 h-4" />
-            </button>
-            <button
-              className={`p-1 rounded transition-colors ${theme === "matrix" ? "hover:bg-green-900" : theme === "vscode" ? "hover:bg-gray-600" : "hover:bg-gray-200"}`}
-              onClick={handleMaximize}
-            >
-              <Maximize2 className="w-4 h-4" />
-            </button>
-            <button
-              className={`p-1 rounded transition-colors ${theme === "matrix" ? "hover:bg-green-900" : theme === "vscode" ? "hover:bg-gray-600" : "hover:bg-gray-200"}`}
-              onClick={handleClose}
-            >
-              <X className="w-4 h-4" />
+              <Code className="w-4 h-4" aria-hidden="true" />
             </button>
           </div>
         </div>
 
-        <div className="flex h-full">
-          {/* Sidebar */}
+        <div className="flex min-h-0 flex-1">{/* Sidebar */}
           <div className={`w-80 border-r flex flex-col ${getSidebarClasses()}`}>
             <div className="p-4 border-b border-gray-300">
               <h2 className="font-bold text-lg">API Endpoints</h2>
