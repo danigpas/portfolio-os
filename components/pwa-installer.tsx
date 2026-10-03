@@ -93,11 +93,11 @@ export function PWAInstaller() {
 
   return (
     <div className="fixed bottom-4 right-4 z-50 max-w-sm">
-      <Card className="p-4 shadow-lg border-orange-200 bg-gradient-to-r from-orange-50 to-orange-100">
+      <Card className="p-4 shadow-lg border-[var(--omarchy-border)] bg-gradient-to-r from-[var(--omarchy-surface-alt)] to-[var(--omarchy-surface)]">
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
-              <Download className="w-4 h-4 text-white" />
+            <div className="w-8 h-8 bg-[var(--omarchy-accent)] rounded-lg flex items-center justify-center">
+              <Download className="w-4 h-4 text-[var(--omarchy-bg)]" />
             </div>
             <div>
               <h3 className="font-semibold text-gray-900">Instalar App</h3>
@@ -129,7 +129,7 @@ export function PWAInstaller() {
         </div>
 
         <div className="flex gap-2">
-          <Button onClick={handleInstallClick} className="flex-1 bg-orange-500 hover:bg-orange-600">
+          <Button onClick={handleInstallClick} className="flex-1 bg-[var(--omarchy-accent)] hover:bg-[var(--omarchy-accent)]/90">
             <Download className="w-4 h-4 mr-2" />
             Instalar
           </Button>

@@ -3,77 +3,120 @@
 
 @custom-variant dark (&:is(.dark *));
 
-:root {
-  /* Orange-dominant vibrant color palette with accessibility */
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+/* ============================================================================
+   Omarchy theme tokens
+   Themes: tokyo-night (default), gruvbox, catppuccin, matrix.
+   Every visual token of the desktop/window/terminal is derived from here.
+   ========================================================================= */
+:root,
+[data-omarchy="tokyo-night"] {
+  --omarchy-bg: #1a1b26;
+  --omarchy-bg-alt: #16161e;
+  --omarchy-surface: #24283b;
+  --omarchy-surface-alt: #1f2335;
+  --omarchy-fg: #c0caf5;
+  --omarchy-accent: #7aa2f7;
+  --omarchy-accent-alt: #bb9af7;
+  --omarchy-muted: #565f89;
+  --omarchy-border: #3b4261;
+  --omarchy-selection: #364a82;
+  --omarchy-danger: #f7768e;
+  --omarchy-success: #9ece6a;
+  --omarchy-warning: #e0af68;
+  --omarchy-pattern: #7aa2f7;
 }
 
-.dark {
-  /* Dark mode with orange accents */
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.439 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
+[data-omarchy="gruvbox"] {
+  --omarchy-bg: #1d2021;
+  --omarchy-bg-alt: #282828;
+  --omarchy-surface: #32302f;
+  --omarchy-surface-alt: #3c3836;
+  --omarchy-fg: #ebdbb2;
+  --omarchy-accent: #fabd2f;
+  --omarchy-accent-alt: #b8bb26;
+  --omarchy-muted: #928374;
+  --omarchy-border: #504945;
+  --omarchy-selection: #665c54;
+  --omarchy-danger: #fb4934;
+  --omarchy-success: #b8bb26;
+  --omarchy-warning: #fe8019;
+  --omarchy-pattern: #fabd2f;
+}
+
+[data-omarchy="catppuccin"] {
+  --omarchy-bg: #1e1e2e;
+  --omarchy-bg-alt: #181825;
+  --omarchy-surface: #313244;
+  --omarchy-surface-alt: #292b3f;
+  --omarchy-fg: #cdd6f4;
+  --omarchy-accent: #cba6f7;
+  --omarchy-accent-alt: #89b4fa;
+  --omarchy-muted: #6c7086;
+  --omarchy-border: #45475a;
+  --omarchy-selection: #585b70;
+  --omarchy-danger: #f38ba8;
+  --omarchy-success: #a6e3a1;
+  --omarchy-warning: #fab387;
+  --omarchy-pattern: #cba6f7;
+}
+
+[data-omarchy="matrix"] {
+  --omarchy-bg: #000000;
+  --omarchy-bg-alt: #001100;
+  --omarchy-surface: #041a06;
+  --omarchy-surface-alt: #06240a;
+  --omarchy-fg: #00ff41;
+  --omarchy-accent: #00ff41;
+  --omarchy-accent-alt: #7fff00;
+  --omarchy-muted: #008f11;
+  --omarchy-border: #005c12;
+  --omarchy-selection: #0d3b0d;
+  --omarchy-danger: #ff5f5f;
+  --omarchy-success: #00ff41;
+  --omarchy-warning: #d7ff00;
+  --omarchy-pattern: #00ff41;
+}
+
+/* Bridge Omarchy palette into the shadcn/Tailwind semantic tokens so the
+   content components (cards, borders, muted text...) follow the theme. */
+:root,
+[data-omarchy="tokyo-night"],
+[data-omarchy="gruvbox"],
+[data-omarchy="catppuccin"],
+[data-omarchy="matrix"] {
+  --background: var(--omarchy-bg);
+  --foreground: var(--omarchy-fg);
+  --card: var(--omarchy-surface);
+  --card-foreground: var(--omarchy-fg);
+  --popover: var(--omarchy-surface);
+  --popover-foreground: var(--omarchy-fg);
+  --primary: var(--omarchy-accent);
+  --primary-foreground: var(--omarchy-bg);
+  --secondary: var(--omarchy-surface-alt);
+  --secondary-foreground: var(--omarchy-fg);
+  --muted: var(--omarchy-surface-alt);
+  --muted-foreground: var(--omarchy-muted);
+  --accent: var(--omarchy-surface-alt);
+  --accent-foreground: var(--omarchy-fg);
+  --destructive: var(--omarchy-danger);
+  --destructive-foreground: var(--omarchy-bg);
+  --border: var(--omarchy-border);
+  --input: var(--omarchy-border);
+  --ring: var(--omarchy-accent);
+  --chart-1: var(--omarchy-accent);
+  --chart-2: var(--omarchy-accent-alt);
+  --chart-3: var(--omarchy-success);
+  --chart-4: var(--omarchy-warning);
+  --chart-5: var(--omarchy-danger);
+  --sidebar: var(--omarchy-bg-alt);
+  --sidebar-foreground: var(--omarchy-fg);
+  --sidebar-primary: var(--omarchy-accent);
+  --sidebar-primary-foreground: var(--omarchy-bg);
+  --sidebar-accent: var(--omarchy-surface-alt);
+  --sidebar-accent-foreground: var(--omarchy-fg);
+  --sidebar-border: var(--omarchy-border);
+  --sidebar-ring: var(--omarchy-accent);
+  --radius: 0.125rem;
 }
 
 @theme inline {
@@ -101,10 +144,10 @@
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  --radius-sm: calc(var(--radius));
+  --radius-md: calc(var(--radius));
+  --radius-lg: calc(var(--radius));
+  --radius-xl: calc(var(--radius) * 2);
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -119,9 +162,13 @@
   * {
     @apply border-border outline-ring/50;
   }
+  html {
+    background-color: var(--omarchy-bg);
+    color: var(--omarchy-fg);
+  }
   body {
     @apply bg-background text-foreground;
-    font-family: var(--font-open-sans);
+    font-family: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
   }
   h1,
   h2,
@@ -129,132 +176,162 @@
   h4,
   h5,
   h6 {
-    font-family: var(--font-montserrat);
+    font-family: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
     @apply text-foreground;
   }
   code,
-  pre {
-    font-family: var(--font-jetbrains-mono);
+  pre,
+  kbd,
+  samp {
+    font-family: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  ::selection {
+    background-color: var(--omarchy-selection);
+    color: var(--omarchy-fg);
   }
 }
 
-/* Boot animation styles */
-@keyframes matrix-rain {
-  0% {
-    transform: translateY(-100vh);
-  }
-  100% {
-    transform: translateY(100vh);
-  }
+/* Display font is reserved for the personal name only. */
+.font-display {
+  font-family: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
 }
 
-.matrix-rain {
+/* ============================================================================
+   Omarchy surfaces / window chrome
+   ========================================================================= */
+.om-window {
+  background-color: var(--omarchy-bg);
+  border: 1px solid var(--omarchy-border);
+  color: var(--omarchy-fg);
+}
+
+.om-panel {
+  background-color: var(--omarchy-surface);
+  border-color: var(--omarchy-border);
+  color: var(--omarchy-fg);
+}
+
+.om-inset {
+  background-color: var(--omarchy-bg-alt);
+  border-color: var(--omarchy-border);
+  color: var(--omarchy-fg);
+}
+
+.om-accent-text {
+  color: var(--omarchy-accent);
+}
+
+.om-accent-bg {
+  background-color: var(--omarchy-accent);
+  color: var(--omarchy-bg);
+}
+
+.om-muted-text {
+  color: var(--omarchy-muted);
+}
+
+.om-border {
+  border-color: var(--omarchy-border);
+}
+
+.om-hover {
+  transition: background-color 120ms ease, color 120ms ease;
+}
+
+.om-hover:hover {
+  background-color: var(--omarchy-surface-alt);
+}
+
+.om-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--omarchy-border) transparent;
+}
+
+/* ============================================================================
+   Wallpapers: subtle ASCII / dither / scanline patterns (CSS only, no blur)
+   ========================================================================= */
+.om-wallpaper {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(0deg, transparent 0%, rgba(34, 197, 94, 0.1) 50%, transparent 100%);
-  animation: matrix-rain 25s linear infinite;
+  inset: 0;
+  background-color: var(--omarchy-bg);
+  overflow: hidden;
 }
 
-.matrix-rain::before {
-  content: "01001000 01100101 01101100 01101100 01101111 00100000 01010111 01101111 01110010 01101100 01100100";
+.om-wallpaper-pattern {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  color: rgba(34, 197, 94, 0.1);
-  font-family: monospace;
-  font-size: 12px;
-  line-height: 20px;
-  white-space: pre-wrap;
-  animation: matrix-rain 15s linear infinite reverse;
+  inset: 0;
+  opacity: 0.5;
+  background-repeat: repeat;
 }
 
-/* Hexagon styles for boot animation */
-.hexagon-border {
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+/* Tokyo Night: fine hiragana-ish grid */
+[data-omarchy="tokyo-night"] .om-wallpaper-pattern {
+  background-image: linear-gradient(var(--omarchy-pattern) 1px, transparent 1px),
+    linear-gradient(90deg, var(--omarchy-pattern) 1px, transparent 1px);
+  background-size: 32px 32px;
+  opacity: 0.05;
 }
 
-.hexagon-inner {
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-  width: 100%;
-  height: 100%;
+/* Gruvbox: warm diagonal crosshatch */
+[data-omarchy="gruvbox"] .om-wallpaper-pattern {
+  background-image: repeating-linear-gradient(
+    45deg,
+    var(--omarchy-pattern) 0,
+    var(--omarchy-pattern) 1px,
+    transparent 1px,
+    transparent 18px
+  );
+  opacity: 0.06;
 }
 
-.hexagon-content {
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-  width: 100%;
-  height: 100%;
+/* Catppuccin: dotted dither */
+[data-omarchy="catppuccin"] .om-wallpaper-pattern {
+  background-image: radial-gradient(var(--omarchy-pattern) 1px, transparent 1px);
+  background-size: 14px 14px;
+  opacity: 0.09;
 }
 
-.hexagon-image {
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+/* Matrix: vertical binary rain columns */
+[data-omarchy="matrix"] .om-wallpaper-pattern {
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--omarchy-pattern) 0,
+    var(--omarchy-pattern) 1px,
+    transparent 1px,
+    transparent 40px
+  );
+  opacity: 0.14;
 }
 
-/* Custom spin animations for boot animation */
-@keyframes spin-slow {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.om-wallpaper-scanlines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent 0,
+    transparent 2px,
+    rgba(0, 0, 0, 0.16) 2px,
+    rgba(0, 0, 0, 0.16) 3px
+  );
 }
 
-@keyframes spin-reverse {
-  from {
-    transform: rotate(360deg);
-  }
-  to {
-    transform: rotate(0deg);
-  }
+.om-wallpaper-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.45) 100%);
 }
 
-.animate-spin-slow {
-  animation: spin-slow 3s linear infinite;
-}
-
-.animate-spin-reverse {
-  animation: spin-reverse 2s linear infinite;
-}
-
-/* Ubuntu desktop styles */
-.ubuntu-wallpaper {
-  background: radial-gradient(circle at 30% 20%, rgba(147, 51, 234, 0.3) 0%, transparent 50%),
-    radial-gradient(circle at 70% 80%, rgba(59, 130, 246, 0.3) 0%, transparent 50%),
-    radial-gradient(circle at 50% 50%, rgba(249, 115, 22, 0.2) 0%, transparent 50%),
-    linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #1e3a8a 100%);
-}
-
-/* Postman app styles */
-.postman-sidebar {
-  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
-}
-
+/* ============================================================================
+   Postman-style app bits kept on tokens
+   ========================================================================= */
 .postman-response {
-  background: #1a1a1a;
-  color: #22c55e;
-  font-family: var(--font-jetbrains-mono);
+  background-color: var(--omarchy-bg-alt);
+  color: var(--omarchy-success);
+  font-family: var(--font-jetbrains-mono), monospace;
 }
 
-.endpoint-item {
-  transition: all 0.2s ease;
-}
-
-.endpoint-item:hover {
-  transform: translateX(4px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.method-badge {
-  font-family: var(--font-jetbrains-mono);
-  font-weight: 600;
-  letter-spacing: 0.5px;
-}
-
-/* Window controls */
 .window-controls {
   -webkit-app-region: drag;
 }
@@ -263,7 +340,9 @@
   -webkit-app-region: no-drag;
 }
 
-/* Smooth animations */
+/* ============================================================================
+   Animations (reduced-motion aware)
+   ========================================================================= */
 @keyframes slideInFromTop {
   from {
     opacity: 0;
@@ -294,52 +373,27 @@
   animation: fadeInScale 0.3s ease-out;
 }
 
-/* JSON syntax highlighting */
+/* JSON syntax highlighting on theme tokens */
 .json-key {
-  color: #0ea5e9;
+  color: var(--omarchy-accent);
 }
-
 .json-string {
-  color: #22c55e;
+  color: var(--omarchy-success);
 }
-
 .json-number {
-  color: #f59e0b;
+  color: var(--omarchy-warning);
 }
-
 .json-boolean {
-  color: #ef4444;
+  color: var(--omarchy-danger);
 }
 
-/* Theme-specific animations and effects */
-[data-theme="matrix"] .animate-pulse {
-  animation: matrix-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-@keyframes matrix-pulse {
-  0%,
-  100% {
-    opacity: 1;
-    box-shadow: 0 0 5px rgba(0, 255, 65, 0.5);
-  }
-  50% {
-    opacity: 0.7;
-    box-shadow: 0 0 20px rgba(0, 255, 65, 0.8);
-  }
-}
-
-[data-theme="vscode"] .animate-pulse {
-  animation: vscode-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-@keyframes vscode-pulse {
-  0%,
-  100% {
-    opacity: 1;
-    box-shadow: 0 0 5px rgba(0, 122, 204, 0.5);
-  }
-  50% {
-    opacity: 0.7;
-    box-shadow: 0 0 20px rgba(0, 122, 204, 0.8);
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
   }
 }

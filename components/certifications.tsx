@@ -63,7 +63,7 @@ const certifications: Certification[] = [
     level: "Intermediate",
     category: "Cloud Computing",
     icon: "☁️",
-    color: "bg-orange-500",
+    color: "bg-[var(--omarchy-accent)]",
     verified: true,
   },
   {
@@ -247,7 +247,7 @@ export function Certifications() {
             </div>
 
             {/* Animated Border */}
-            <div className="absolute inset-0 rounded-lg border-2 border-transparent bg-gradient-to-r from-orange-400 via-purple-500 to-blue-500 opacity-0 hover:opacity-100 transition-opacity duration-300 -z-10"></div>
+            <div className="absolute inset-0 rounded-lg border-2 border-transparent bg-gradient-to-r from-[var(--omarchy-accent)] via-purple-500 to-blue-500 opacity-0 hover:opacity-100 transition-opacity duration-300 -z-10"></div>
           </Card>
         ))}
       </div>
@@ -255,7 +255,7 @@ export function Certifications() {
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12">
         <Card className="p-4 text-center">
-          <Award className="w-8 h-8 mx-auto mb-2 text-orange-500" />
+          <Award className="w-8 h-8 mx-auto mb-2 text-[var(--omarchy-accent)]" />
           <div className="text-2xl font-bold">{certifications.length}</div>
           <div className="text-sm text-gray-600">Certificaciones</div>
         </Card>

@@ -76,13 +76,13 @@ export function Testimonials() {
 
       <Card className="relative overflow-hidden">
         <div className="p-8">
-          <Quote className="w-12 h-12 text-orange-200 mb-4" />
+          <Quote className="w-12 h-12 text-[var(--omarchy-accent)]/40 mb-4" />
 
           <blockquote className="text-lg mb-6 leading-relaxed">"{testimonial.content}"</blockquote>
 
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-orange-400 to-orange-600 rounded-full flex items-center justify-center text-white font-semibold">
+              <div className="w-12 h-12 bg-gradient-to-r from-[var(--omarchy-accent)] to-[var(--omarchy-accent-alt)] rounded-full flex items-center justify-center text-[var(--omarchy-bg)] font-semibold">
                 {testimonial.name
                   .split(" ")
                   .map((n) => n[0])
@@ -124,7 +124,7 @@ export function Testimonials() {
               key={index}
               onClick={() => setCurrentTestimonial(index)}
               className={`w-2 h-2 rounded-full transition-all ${
-                index === currentTestimonial ? "bg-orange-500" : "bg-gray-300"
+                index === currentTestimonial ? "bg-[var(--omarchy-accent)]" : "bg-gray-300"
               }`}
             />
           ))}

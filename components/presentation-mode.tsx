@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Presentation, ChevronLeft, ChevronRight, X } from "lucide-react"
-import { useTheme } from "@/components/theme-system"
 
 interface PresentationModeProps {
   isOpen: boolean
@@ -14,7 +13,6 @@ interface PresentationModeProps {
 
 export function PresentationMode({ isOpen, onClose }: PresentationModeProps) {
   const [currentSlide, setCurrentSlide] = useState(0)
-  const { theme } = useTheme()
 
   const slides = [
     {
@@ -22,12 +20,12 @@ export function PresentationMode({ isOpen, onClose }: PresentationModeProps) {
       subtitle: "Desarrollador Backend Python",
       content: (
         <div className="text-center space-y-6">
-          <div className="w-32 h-32 mx-auto rounded-full bg-gradient-to-r from-orange-400 to-orange-600 flex items-center justify-center text-white text-4xl font-bold">
+          <div className="w-32 h-32 mx-auto rounded-full bg-gradient-to-r from-[var(--omarchy-accent)] to-[var(--omarchy-accent-alt)] flex items-center justify-center text-[var(--omarchy-bg)] text-4xl font-bold">
             DGP
           </div>
           <div className="space-y-2">
             <p className="text-xl">📍 Málaga, España</p>
-            <p className="text-lg">🚀 2+ años de experiencia</p>
+            <p className="text-lg">🚀 3+ años de experiencia</p>
             <p className="text-lg">💡 Especializado en FastAPI y Python</p>
           </div>
         </div>
@@ -35,7 +33,7 @@ export function PresentationMode({ isOpen, onClose }: PresentationModeProps) {
     },
     {
       title: "Experiencia Profesional",
-      subtitle: "Desarrollador Backend en DisOfic",
+      subtitle: "Semi-Senior Python Developer en Inforyde · antes Backend en DisOfic",
       content: (
         <div className="space-y-6">
           <div className="grid grid-cols-2 gap-8">
@@ -89,17 +87,17 @@ export function PresentationMode({ isOpen, onClose }: PresentationModeProps) {
           <div className="grid grid-cols-1 gap-6">
             <Card className="p-6">
               <h3 className="text-xl font-semibold">Universidad de Málaga</h3>
-              <p className="text-gray-600">Grado en Ingeniería Informática</p>
+              <p className="text-[var(--omarchy-muted)]">Grado en Ingeniería Informática</p>
               <p className="text-sm">2017 - 2021</p>
             </Card>
             <Card className="p-6">
               <h3 className="text-xl font-semibold">Cesur</h3>
-              <p className="text-gray-600">Certificado de Profesionalidad - Programación</p>
+              <p className="text-[var(--omarchy-muted)]">Certificado de Profesionalidad - Programación</p>
               <p className="text-sm">2023</p>
             </Card>
             <Card className="p-6">
               <h3 className="text-xl font-semibold">Junta de Andalucía</h3>
-              <p className="text-gray-600">Grado Superior DAW (Próximo)</p>
+              <p className="text-[var(--omarchy-muted)]">Grado Superior DAW (Próximo)</p>
               <p className="text-sm">Septiembre 2025</p>
             </Card>
           </div>
@@ -115,19 +113,19 @@ export function PresentationMode({ isOpen, onClose }: PresentationModeProps) {
             <h3 className="text-xl font-semibold mb-4">Fortalezas</h3>
             <ul className="space-y-3">
               <li className="flex items-center gap-2">
-                <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
+                <span className="w-2 h-2 bg-[var(--omarchy-accent)] rounded-full"></span>
                 Experiencia real en producción
               </li>
               <li className="flex items-center gap-2">
-                <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
+                <span className="w-2 h-2 bg-[var(--omarchy-accent)] rounded-full"></span>
                 Optimización de rendimiento
               </li>
               <li className="flex items-center gap-2">
-                <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
+                <span className="w-2 h-2 bg-[var(--omarchy-accent)] rounded-full"></span>
                 Arquitecturas escalables
               </li>
               <li className="flex items-center gap-2">
-                <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
+                <span className="w-2 h-2 bg-[var(--omarchy-accent)] rounded-full"></span>
                 Pasión por la innovación
               </li>
             </ul>
@@ -135,10 +133,10 @@ export function PresentationMode({ isOpen, onClose }: PresentationModeProps) {
           <div>
             <h3 className="text-xl font-semibold mb-4">Contacto</h3>
             <div className="space-y-2">
-              <p>📧 daniel@example.com</p>
+              <p>📧 danigpascual@protonmail.com</p>
               <p>📱 +34 XXX XXX XXX</p>
-              <p>🌐 LinkedIn: danielgonzalezpascual</p>
-              <p>💻 GitHub: danielgonzalezpascual</p>
+              <p>🌐 LinkedIn: daniel-gonzález-pascual-dev</p>
+              <p>💻 GitHub: danigpas</p>
             </div>
           </div>
         </div>
@@ -171,17 +169,9 @@ export function PresentationMode({ isOpen, onClose }: PresentationModeProps) {
 
   return (
     <div className="fixed inset-0 z-50 bg-black">
-      <div
-        className={`h-full flex flex-col ${
-          theme === "ubuntu"
-            ? "bg-gradient-to-br from-purple-900 to-orange-600"
-            : theme === "vscode"
-              ? "bg-gray-900"
-              : "bg-black"
-        }`}
-      >
+      <div className="flex h-full flex-col bg-[var(--omarchy-bg)]">
         {/* Header */}
-        <div className="flex justify-between items-center p-6 text-white">
+        <div className="flex justify-between items-center p-6 text-[var(--omarchy-fg)]">
           <div className="flex items-center gap-4">
             <Presentation className="w-6 h-6" />
             <span className="font-semibold">Modo Presentación</span>
@@ -189,7 +179,7 @@ export function PresentationMode({ isOpen, onClose }: PresentationModeProps) {
               {currentSlide + 1} / {slides.length}
             </span>
           </div>
-          <Button variant="ghost" size="sm" onClick={onClose} className="text-white hover:bg-white/20">
+          <Button variant="ghost" size="sm" onClick={onClose} className="text-[var(--omarchy-fg)] hover:bg-[var(--omarchy-fg)]/20">
             <X className="w-4 h-4" />
           </Button>
         </div>
@@ -198,10 +188,10 @@ export function PresentationMode({ isOpen, onClose }: PresentationModeProps) {
         <div className="flex-1 flex items-center justify-center p-8">
           <div className="max-w-6xl w-full">
             <div className="text-center mb-8">
-              <h1 className="text-4xl font-bold text-white mb-2">{slides[currentSlide].title}</h1>
-              <p className="text-xl text-white/80">{slides[currentSlide].subtitle}</p>
+              <h1 className="text-4xl font-bold text-[var(--omarchy-fg)] mb-2">{slides[currentSlide].title}</h1>
+              <p className="text-xl text-[var(--omarchy-fg)]/80">{slides[currentSlide].subtitle}</p>
             </div>
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 text-white">
+            <div className="bg-[var(--omarchy-fg)]/10 backdrop-blur-md rounded-2xl p-8 text-[var(--omarchy-fg)]">
               {slides[currentSlide].content}
             </div>
           </div>
@@ -213,7 +203,7 @@ export function PresentationMode({ isOpen, onClose }: PresentationModeProps) {
             variant="ghost"
             onClick={prevSlide}
             disabled={currentSlide === 0}
-            className="text-white hover:bg-white/20"
+            className="text-[var(--omarchy-fg)] hover:bg-[var(--omarchy-fg)]/20"
           >
             <ChevronLeft className="w-4 h-4 mr-2" />
             Anterior
@@ -224,7 +214,7 @@ export function PresentationMode({ isOpen, onClose }: PresentationModeProps) {
               <button
                 key={index}
                 onClick={() => setCurrentSlide(index)}
-                className={`w-3 h-3 rounded-full transition-all ${index === currentSlide ? "bg-white" : "bg-white/30"}`}
+                className={`w-3 h-3 rounded-full transition-all ${index === currentSlide ? "bg-[var(--omarchy-fg)]" : "bg-[var(--omarchy-fg)]/30"}`}
               />
             ))}
           </div>
@@ -233,7 +223,7 @@ export function PresentationMode({ isOpen, onClose }: PresentationModeProps) {
             variant="ghost"
             onClick={nextSlide}
             disabled={currentSlide === slides.length - 1}
-            className="text-white hover:bg-white/20"
+            className="text-[var(--omarchy-fg)] hover:bg-[var(--omarchy-fg)]/20"
           >
             Siguiente
             <ChevronRight className="w-4 h-4 ml-2" />
