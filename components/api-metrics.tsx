@@ -78,7 +78,7 @@ export function ApiMetrics({ activeEndpoint }: ApiMetricsProps) {
         {history.map((value, index) => (
           <div
             key={index}
-            className="bg-orange-400 rounded-sm w-2 transition-all duration-300"
+            className="bg-[var(--omarchy-accent)] rounded-sm w-2 transition-all duration-300"
             style={{
               height: `${((value - min) / range) * 100}%`,
               minHeight: "4px",
@@ -92,7 +92,7 @@ export function ApiMetrics({ activeEndpoint }: ApiMetricsProps) {
   return (
     <div className="space-y-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
       <div className="flex items-center space-x-2 mb-4">
-        <Activity className="w-5 h-5 text-orange-500" />
+        <Activity className="w-5 h-5 text-[var(--omarchy-accent)]" />
         <h3 className="font-semibold text-gray-900 dark:text-white">API Metrics</h3>
         <Badge variant="outline" className="text-xs">
           Live
@@ -101,15 +101,15 @@ export function ApiMetrics({ activeEndpoint }: ApiMetricsProps) {
 
       <div className="grid grid-cols-2 gap-4">
         {/* Response Time */}
-        <Card className="border-orange-200 dark:border-orange-800">
+        <Card className="border-[var(--omarchy-border)]">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm flex items-center space-x-2">
-              <Clock className="w-4 h-4 text-orange-500" />
+              <Clock className="w-4 h-4 text-[var(--omarchy-accent)]" />
               <span>Response Time</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-orange-600">{metrics.responseTime.toFixed(0)}ms</div>
+            <div className="text-2xl font-bold text-[var(--omarchy-accent)]">{metrics.responseTime.toFixed(0)}ms</div>
             <div className="mt-2">{renderMiniChart()}</div>
           </CardContent>
         </Card>
@@ -176,7 +176,7 @@ export function ApiMetrics({ activeEndpoint }: ApiMetricsProps) {
             </div>
             <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
               <div
-                className="bg-orange-500 h-2 rounded-full transition-all duration-500"
+                className="bg-[var(--omarchy-accent)] h-2 rounded-full transition-all duration-500"
                 style={{ width: `${metrics.cpuUsage}%` }}
               />
             </div>

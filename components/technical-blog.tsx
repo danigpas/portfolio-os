@@ -227,7 +227,7 @@ export function TechnicalBlog() {
             placeholder="Buscar artículos..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--omarchy-accent)] focus:border-transparent"
           />
         </div>
 
@@ -236,7 +236,7 @@ export function TechnicalBlog() {
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+            className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--omarchy-accent)] focus:border-transparent"
           >
             {categories.map((category) => (
               <option key={category} value={category}>
@@ -257,11 +257,11 @@ export function TechnicalBlog() {
               <Card key={post.id} className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer">
                 <div className="p-6">
                   <div className="flex items-center gap-2 mb-3">
-                    <Badge className="bg-orange-100 text-orange-800">{post.category}</Badge>
+                    <Badge className="bg-[var(--omarchy-accent)]/15 text-[var(--omarchy-accent)]">{post.category}</Badge>
                     {post.featured && <Badge variant="outline">Destacado</Badge>}
                   </div>
 
-                  <h3 className="text-xl font-semibold mb-3 hover:text-orange-600 transition-colors">{post.title}</h3>
+                  <h3 className="text-xl font-semibold mb-3 hover:text-[var(--omarchy-accent)] transition-colors">{post.title}</h3>
 
                   <p className="text-gray-600 mb-4 line-clamp-3">{post.excerpt}</p>
 
@@ -317,10 +317,10 @@ export function TechnicalBlog() {
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
                       <Badge variant="outline">{post.category}</Badge>
-                      {post.featured && <Badge className="bg-orange-100 text-orange-800">Destacado</Badge>}
+                      {post.featured && <Badge className="bg-[var(--omarchy-accent)]/15 text-[var(--omarchy-accent)]">Destacado</Badge>}
                     </div>
 
-                    <h3 className="text-lg font-semibold mb-2 hover:text-orange-600 transition-colors">{post.title}</h3>
+                    <h3 className="text-lg font-semibold mb-2 hover:text-[var(--omarchy-accent)] transition-colors">{post.title}</h3>
 
                     <p className="text-gray-600 mb-3">{post.excerpt}</p>
 

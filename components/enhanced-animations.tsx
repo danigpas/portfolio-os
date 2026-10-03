@@ -129,66 +129,6 @@ export function ProgressBar({
   )
 }
 
-export function PulsingDot({
-  size = "w-3 h-3",
-  color = "bg-orange-500",
-  className = "",
-}: {
-  size?: string
-  color?: string
-  className?: string
-}) {
-  return (
-    <div className={`relative ${className}`}>
-      <div className={`${size} ${color} rounded-full animate-ping absolute`} />
-      <div className={`${size} ${color} rounded-full relative`} />
-    </div>
-  )
-}
-
-export function WaveAnimation({
-  className = "",
-  color = "text-orange-500",
-}: {
-  className?: string
-  color?: string
-}) {
-  return (
-    <div className={`flex items-center space-x-1 ${className}`}>
-      {[0, 1, 2, 3, 4].map((i) => (
-        <div
-          key={i}
-          className={`w-1 h-8 ${color.replace("text-", "bg-")} rounded-full animate-pulse`}
-          style={{
-            animationDelay: `${i * 0.1}s`,
-            animationDuration: "1s",
-          }}
-        />
-      ))}
-    </div>
-  )
-}
-
-export function RotatingBorder({
-  children,
-  className = "",
-  borderColor = "border-orange-500",
-}: {
-  children: React.ReactNode
-  className?: string
-  borderColor?: string
-}) {
-  return (
-    <div className={`relative ${className}`}>
-      <div
-        className={`absolute inset-0 ${borderColor} border-2 rounded-lg animate-spin`}
-        style={{ animationDuration: "3s" }}
-      />
-      <div className="relative bg-white rounded-lg p-4">{children}</div>
-    </div>
-  )
-}
-
 export function ShimmerEffect({
   children,
   className = "",

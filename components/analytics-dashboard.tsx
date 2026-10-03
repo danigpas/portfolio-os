@@ -106,7 +106,7 @@ export function AnalyticsDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="p-6">
           <div className="flex items-center gap-3 mb-2">
-            <Eye className="w-8 h-8 text-orange-500" />
+            <Eye className="w-8 h-8 text-[var(--omarchy-accent)]" />
             <div>
               <div className="text-2xl font-bold">
                 <CountUpAnimation end={analyticsData.totalViews} duration={2000} />
@@ -170,14 +170,14 @@ export function AnalyticsDashboard() {
       {/* Top Pages */}
       <Card className="p-6">
         <h3 className="font-semibold mb-4 flex items-center gap-2">
-          <BarChart3 className="w-5 h-5 text-orange-500" />
+          <BarChart3 className="w-5 h-5 text-[var(--omarchy-accent)]" />
           Páginas Más Visitadas
         </h3>
         <div className="space-y-3">
           {analyticsData.topPages.map((page, index) => (
             <div key={index} className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center text-orange-600 font-semibold text-sm">
+                <div className="w-8 h-8 bg-[var(--omarchy-accent)]/15 rounded-lg flex items-center justify-center text-[var(--omarchy-accent)] font-semibold text-sm">
                   {index + 1}
                 </div>
                 <div>

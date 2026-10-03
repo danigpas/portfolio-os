@@ -215,21 +215,21 @@ export default function AboutSection() {
   if (loading) {
     return (
       <div className="flex items-center justify-center p-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--omarchy-accent)]"></div>
       </div>
     )
   }
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <div className="bg-white rounded-lg shadow-lg p-8">
+      <div className="bg-[var(--omarchy-surface)] rounded-lg shadow-lg p-8">
         <div className="flex items-center space-x-4 mb-6">
-          <div className="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center">
-            <User className="w-8 h-8 text-white" />
+          <div className="w-16 h-16 bg-[var(--omarchy-accent)] rounded-full flex items-center justify-center">
+            <User className="w-8 h-8 text-[var(--omarchy-bg)]" />
           </div>
           <div>
             <h1 className="text-3xl font-bold text-gray-900">{profileData?.name}</h1>
-            <p className="text-xl text-orange-600">{profileData?.role}</p>
+            <p className="text-xl text-[var(--omarchy-accent)]">{profileData?.role}</p>
             <div className="flex items-center text-gray-600 mt-1">
               <MapPin className="w-4 h-4 mr-1" />
               <span>{profileData?.location}</span>
@@ -242,14 +242,14 @@ export default function AboutSection() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <h3 className="text-lg font-semibold mb-3 flex items-center">
-              <Code className="w-5 h-5 mr-2 text-orange-500" />
+              <Code className="w-5 h-5 mr-2 text-[var(--omarchy-accent)]" />
               Tecnologías
             </h3>
             <div className="flex flex-wrap gap-2">
               {profileData?.skills.map((skill, index) => (
                 <span
                   key={index}
-                  className="px-3 py-1 bg-orange-100 text-orange-800 rounded-full text-sm"
+                  className="px-3 py-1 bg-[var(--omarchy-accent)]/15 text-[var(--omarchy-accent)] rounded-full text-sm"
                 >
                   {skill}
                 </span>
@@ -259,7 +259,7 @@ export default function AboutSection() {
           
           <div>
             <h3 className="text-lg font-semibold mb-3">Experiencia</h3>
-            <p className="text-2xl font-bold text-orange-600">
+            <p className="text-2xl font-bold text-[var(--omarchy-accent)]">
               {profileData?.yearsOfExperience} años
             </p>
             <p className="text-sm text-gray-600 mt-1">
