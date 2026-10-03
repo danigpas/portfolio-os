@@ -24,6 +24,7 @@ import {
   Smartphone,
 } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
+import { getCvData } from "@/lib/cv-data"
 import { useTheme } from "@/components/theme-system"
 import { AboutSection } from "@/components/about-section"
 import { ExperienceSection } from "@/components/experience-section"
@@ -117,21 +118,20 @@ export function PostmanApp({ onMinimize, onMaximize, onClose, initialSection = "
   }
 
   const getEndpointData = (endpoint: string) => {
+    const cv = getCvData(language)
     const endpointData = {
       "GET /about": {
         status: 200,
         responseTime: "45ms",
         data: {
-          name: "Daniel González Pascual",
-          role: "Desarrollador Backend Python",
-          location: "Málaga, España",
-          description:
-            language === "es"
-              ? "Desarrollador backend especializado en Python con experiencia en FastAPI, Django y arquitecturas escalables. Apasionado por crear soluciones eficientes y robustas."
-              : "Backend developer specialized in Python with experience in FastAPI, Django and scalable architectures. Passionate about creating efficient and robust solutions.",
-          skills: ["Python", "FastAPI", "Django", "PostgreSQL", "Redis", "Docker", "AWS"],
-          yearsOfExperience: 2.3,
-          currentlyLearning: "Desarrollo de Aplicaciones Web (DAW)",
+          name: cv.about.name,
+          role: cv.about.role,
+          location: cv.contact.location,
+          description: cv.about.summary,
+          skills: cv.skills.flatMap((group) => group.items),
+          yearsOfExperience: cv.about.yearsOfExperience,
+          currentlyLearning:
+            language === "es" ? "Desarrollo de Aplicaciones Web (DAW)" : "Web Application Development (DAW)",
         },
       },
       "GET /analytics": {
@@ -227,77 +227,27 @@ export function PostmanApp({ onMinimize, onMaximize, onClose, initialSection = "
       "GET /experience": {
         status: 200,
         responseTime: "38ms",
-        data: [
-          {
-            company: "DisOfic",
-            position: "Desarrollador Backend",
-            duration: "Sept 2023 - Actualidad (2 años 3 meses)",
-            type: "Jornada completa",
-            description:
-              "Desarrollo de API de integración en tiempo real con FastAPI para sincronizar +50 sitios WordPress con CRM Odoo. Optimización de procesos con Python, mejora de experiencia de compra, implementación de arquitectura asíncrona con Celery, Redis y RabbitMQ.",
-            technologies: ["Python", "FastAPI", "MySQL", "PostgreSQL", "Redis", "Celery", "RabbitMQ"],
-            achievements: [
-              "Automatización de consulta de stock y precios de +12,000 productos",
-              "Reducción del 50% en incidencias relacionadas con pedidos",
-              "Implementación de sistema de workers para sincronización masiva",
-            ],
-          },
-          {
-            company: "DisOfic",
-            position: "Desarrollador de Aplicaciones",
-            duration: "Jun 2023 - Sept 2023 (4 meses)",
-            type: "Contrato de prácticas",
-            description:
-              "Desarrollo de aplicación para gestión de almacén y entrada/salida de mercancía. Aplicación de escritorio en C# con Oracle Forms.",
-            technologies: ["C#", "Oracle Forms", "Arquitectura de aplicación"],
-            achievements: ["Mejora en funcionalidad y velocidad de la aplicación existente"],
-          },
-        ],
+        data: cv.experience.map((job) => ({
+          company: job.company,
+          position: job.role,
+          duration: `${job.period}${job.current ? (language === "es" ? " (actual)" : " (current)") : ""}`,
+          location: job.location,
+          type: job.type,
+          description: [job.summary, ...job.highlights].join(" "),
+          technologies: job.stack,
+          achievements: job.highlights,
+        })),
       },
       "GET /education": {
         status: 200,
         responseTime: "42ms",
-        data: [
-          {
-            institution: "Junta de Andalucía",
-            degree: "Técnico Superior en Desarrollo de Aplicaciones Web (DAW)",
-            period: "Sept 2025 - Jun 2027",
-            status: "En curso",
-            description: "Formación avanzada en desarrollo web full-stack",
-          },
-          {
-            institution: "Cesur",
-            degree: "Certificado de Profesionalidad - Programación de Sistemas Informáticos",
-            period: "Feb 2023 - Jun 2023",
-            status: "Completado",
-            specialization: "Desarrollo de aplicaciones",
-            skills: [
-              "HTML",
-              "GitHub",
-              "Visual Studio",
-              "C#",
-              "Documentación",
-              "Habilidades sociales",
-              "MySQL",
-              "Resolución de problemas",
-              ".NET Framework",
-            ],
-          },
-          {
-            institution: "Universidad de Málaga",
-            degree: "Grado en Ingeniería Informática",
-            period: "Sept 2017 - Sept 2021",
-            status: "Completado",
-            skills: ["Documentación", "Habilidades sociales", "Resolución de problemas"],
-          },
-          {
-            institution: "Universidad Internacional Menéndez Pelayo",
-            degree: "Curso de Inmersión en Lengua Inglesa",
-            period: "Jul 2019 - Jul 2019",
-            level: "B1",
-            skills: ["Habilidades sociales"],
-          },
-        ],
+        data: cv.education.map((item) => ({
+          institution: item.institution,
+          degree: item.title,
+          period: item.period,
+          status: item.status,
+          description: item.description,
+        })),
       },
       "GET /projects": {
         status: 200,
@@ -417,10 +367,10 @@ export function PostmanApp({ onMinimize, onMaximize, onClose, initialSection = "
         data: {
           message: "Endpoint de contacto disponible",
           methods: ["email", "linkedin", "github"],
-          email: "daniel@example.com",
-          linkedin: "https://linkedin.com/in/daniel-gonzalez-pascual",
-          github: "https://github.com/danielgonzalezpascual",
-          location: "Málaga, España",
+          email: cv.contact.email,
+          linkedin: cv.contact.linkedin,
+          github: cv.contact.github,
+          location: cv.contact.location,
           availability: "Disponible para nuevas oportunidades",
         },
       },

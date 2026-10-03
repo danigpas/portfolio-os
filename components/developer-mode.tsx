@@ -54,7 +54,7 @@ async def get_about_info() -> Dict[str, Any]:
             "location": "Málaga, España",
             "description": "Desarrollador backend especializado en Python...",
             "skills": ["Python", "FastAPI", "Django", "PostgreSQL", "Redis"],
-            "years_of_experience": 2.3,
+            "years_of_experience": 3.0,
             "currently_learning": "Desarrollo de Aplicaciones Web (DAW)"
         }
         
@@ -334,11 +334,25 @@ INSERT INTO experiences (
     'DisOfic',
     'Desarrollador Backend',
     '2023-09-01',
-    NULL,
+    '2026-03-01',
     'Jornada completa',
     'Desarrollo de API de integración en tiempo real con FastAPI...',
     'Python,FastAPI,MySQL,PostgreSQL,Redis,Celery,RabbitMQ',
     'Automatización de consulta de stock y precios de +12,000 productos;Reducción del 50% en incidencias relacionadas con pedidos'
+);
+
+INSERT INTO experiences (
+    company, position, start_date, end_date, employment_type,
+    description, technologies, achievements
+) VALUES (
+    'Inforyde',
+    'Desarrollador Python Semi-Senior',
+    '2026-03-01',
+    NULL,
+    'Jornada completa',
+    'Desarrollo backend Python para el mercado eléctrico (Madrid)...',
+    'Python,FastAPI,SQL,Git',
+    'Desarrollo para el sector energético;Equipos multidisciplinares'
 );
 
 -- Indexes for better performance

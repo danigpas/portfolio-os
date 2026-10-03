@@ -24,7 +24,7 @@ const translations = {
     "hero.title": "Transformando Ideas en Código Eficiente",
     "hero.subtitle": "Desarrollador Backend Python | Pasión por la Innovación",
     "hero.description":
-      "Especializado en crear APIs robustas y escalables con más de 2 años de experiencia en el ecosistema Python.",
+      "Especializado en crear APIs robustas y escalables con más de 3 años de experiencia en el ecosistema Python.",
     "hero.cta": "Explora Mis Proyectos",
     "hero.contact": "Contactar",
     "hero.downloadCV": "Descargar CV",
@@ -32,14 +32,17 @@ const translations = {
     // About Section
     "about.title": "Sobre Mí",
     "about.description":
-      "Como desarrollador backend especializado en el stack de Python con 2+ años de experiencia, me apasiona construir la lógica robusta y escalable que potencia las aplicaciones. Mi enfoque se centra en la trazabilidad de los datos, la optimización de procesos y el diseño de APIs eficientes.",
+      "Como desarrollador backend especializado en el stack de Python con 3+ años de experiencia, me apasiona construir la lógica robusta y escalable que potencia las aplicaciones. Mi enfoque se centra en la trazabilidad de los datos, la optimización de procesos y el diseño de APIs eficientes.",
     "about.location": "Málaga, España",
+    "about.stat.years": "Años de Experiencia",
+    "about.stat.sites": "Sitios Integrados",
+    "about.stat.items": "Artículos Gestionados",
 
     // Experience Section
     "experience.title": "Experiencia",
     "experience.disofic.title": "Desarrollador de Backend",
     "experience.disofic.company": "DisOfic",
-    "experience.disofic.period": "Sept 2023 - Actualidad · 2 años",
+    "experience.disofic.period": "Sept 2023 - Mar 2026 · 2 años 6 meses",
     "experience.disofic.description1":
       "Desarrollo de API de integración en tiempo real: Lideré el diseño e implementación de una API con FastAPI para sincronizar más de 50 sitios de WordPress con el CRM Odoo. Esta solución automatizó la consulta de stock y precios de más de 12,000 productos y la gestión de pedidos, mejorando la eficiencia operativa.",
     "experience.disofic.description2":
@@ -50,6 +53,16 @@ const translations = {
       "Implementación de arquitectura asíncrona: Desarrollé un sistema de workers con Celery, Redis y RabbitMQ para la sincronización masiva de datos en segundo plano entre Odoo y WordPress Multisite, garantizando la coherencia y el rendimiento de las plataformas.",
     "experience.disofic.description5":
       "Manejo avanzado de bases de datos: Trabajé de forma habitual con MySQL, PostgreSQL y Oracle (12), realizando tareas de creación de tablas, optimización de consultas, actualización y gestión de backups, asegurando la integridad de los datos en toda la infraestructura.",
+
+    "experience.inforyde.title": "Desarrollador Python Semi-Senior",
+    "experience.inforyde.company": "Inforyde",
+    "experience.inforyde.period": "Mar 2026 - Actualidad · Madrid",
+    "experience.inforyde.description1":
+      "Desarrollo de aplicaciones y servicios backend en Python en Inforyde, consultora especializada en el mercado eléctrico ubicada en Madrid.",
+    "experience.inforyde.description2":
+      "Participación en el análisis, desarrollo y mantenimiento de soluciones para clientes del sector energético.",
+    "experience.inforyde.description3":
+      "Trabajo en equipos multidisciplinares aplicando buenas prácticas de desarrollo, testing y control de versiones.",
 
     "experience.internship.title": "Desarrollador de Aplicaciones",
     "experience.internship.company": "DisOfic - Contrato de Prácticas",
@@ -125,7 +138,7 @@ const translations = {
     "hero.title": "Transforming Ideas into Efficient Code",
     "hero.subtitle": "Backend Python Developer | Passion for Innovation",
     "hero.description":
-      "Specialized in creating robust and scalable APIs with over 2 years of experience in the Python ecosystem.",
+      "Specialized in creating robust and scalable APIs with over 3 years of experience in the Python ecosystem.",
     "hero.cta": "Explore My Projects",
     "hero.contact": "Contact Me",
     "hero.downloadCV": "Download CV",
@@ -133,14 +146,17 @@ const translations = {
     // About Section
     "about.title": "About Me",
     "about.description":
-      "As a backend developer specialized in the Python stack with 2+ years of experience, I am passionate about building robust and scalable logic that powers applications. My focus is on data traceability, process optimization, and efficient API design.",
+      "As a backend developer specialized in the Python stack with 3+ years of experience, I am passionate about building robust and scalable logic that powers applications. My focus is on data traceability, process optimization, and efficient API design.",
     "about.location": "Málaga, Spain",
+    "about.stat.years": "Years of Experience",
+    "about.stat.sites": "Integrated Sites",
+    "about.stat.items": "Managed Items",
 
     // Experience Section
     "experience.title": "Experience",
     "experience.disofic.title": "Backend Developer",
     "experience.disofic.company": "DisOfic",
-    "experience.disofic.period": "Sept 2023 - Present · 2 years",
+    "experience.disofic.period": "Sept 2023 - Mar 2026 · 2.5 years",
     "experience.disofic.description1":
       "Real-time integration API development: Led the design and implementation of a FastAPI to synchronize over 50 WordPress sites with Odoo CRM. This solution automated stock and price queries for over 12,000 products and order management, improving operational efficiency.",
     "experience.disofic.description2":
@@ -151,6 +167,16 @@ const translations = {
       "Asynchronous architecture implementation: Developed a worker system with Celery, Redis and RabbitMQ for massive background data synchronization between Odoo and WordPress Multisite, ensuring platform coherence and performance.",
     "experience.disofic.description5":
       "Advanced database management: Worked regularly with MySQL, PostgreSQL and Oracle (12), performing table creation, query optimization, updates and backup management tasks, ensuring data integrity across the entire infrastructure.",
+
+    "experience.inforyde.title": "Semi-Senior Python Developer",
+    "experience.inforyde.company": "Inforyde",
+    "experience.inforyde.period": "Mar 2026 - Present · Madrid",
+    "experience.inforyde.description1":
+      "Backend development in Python at Inforyde, a consultancy specialized in the electricity market based in Madrid.",
+    "experience.inforyde.description2":
+      "Involved in the analysis, development and maintenance of solutions for clients in the energy sector.",
+    "experience.inforyde.description3":
+      "Working in multidisciplinary teams applying good development, testing and version control practices.",
 
     "experience.internship.title": "Application Developer",
     "experience.internship.company": "DisOfic - Internship Contract",

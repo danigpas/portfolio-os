@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import { useTheme } from "@/components/theme-system"
+import { getCvData } from "@/lib/cv-data"
 import { X, Minimize2, Maximize2 } from "lucide-react"
 
 interface TerminalProps {
@@ -21,6 +22,7 @@ export function Terminal({ onClose, onMinimize, onMaximize, onReboot, onSuspend,
   const [isMaximized, setIsMaximized] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const { theme } = useTheme()
+  const cv = getCvData("es")
 
   useEffect(() => {
     // Welcome message
@@ -41,7 +43,7 @@ Escribe 'help' para ver comandos disponibles`,
     }
   }, [])
 
-  const commands = {
+  const commands: Record<string, () => string> = {
     help: () => `Comandos disponibles:
 • about - Información personal
 • skills - Habilidades técnicas
@@ -58,35 +60,32 @@ Escribe 'help' para ver comandos disponibles`,
 • suspend - Suspender la sesión
 • shutdown - Apagar el sistema`,
 
-    about: () => `Daniel González Pascual
-Desarrollador Backend especializado en Python
-📍 Málaga, España
-🎯 2+ años de experiencia
-🚀 Apasionado por crear soluciones eficientes`,
+    about: () => `${cv.about.name}
+${cv.about.role}
+📍 ${cv.contact.location}
+🎯 ${cv.about.yearsOfExperience} de experiencia
+🚀 ${cv.about.tagline}`,
 
     skills: () => `Habilidades Técnicas:
-• Backend: Python (FastAPI, Flask, Django), Node.js
-• Frontend: React, Next.js, TypeScript
-• Bases de Datos: MySQL, PostgreSQL, Oracle
-• DevOps: Docker, Kubernetes, CI/CD
-• Otros: Odoo, WordPress`,
+${cv.skills.map((group) => `• ${group.category}: ${group.items.join(", ")}`).join("\n")}`,
 
     experience: () => `Experiencia Laboral:
-• Desarrollador Backend en Aftalia (2022 - Presente)
-• ...`,
+${cv.experience
+      .map((job) => `• ${job.role} en ${job.company} (${job.period})`)
+      .join("\n")}`,
 
     projects: () => `Proyectos Realizados:
-• Portfolio personal con Next.js y TypeScript
-• ...`,
+${cv.projects.map((project) => `• ${project.name}: ${project.description}`).join("\n")}`,
 
     education: () => `Formación Académica:
-• Grado en Ingeniería de Software - Universidad de Málaga (2018 - 2022)
-• ...`,
+${cv.education
+      .map((item) => `• ${item.title} - ${item.institution} (${item.period})`)
+      .join("\n")}`,
 
     contact: () => `Información de Contacto:
-• Email: daniel.gonzalez.pascual@email.com
-• LinkedIn: linkedin.com/in/daniel-gonzalez-pascual
-• GitHub: github.com/daniel-gonzalez-pascual`,
+• Email: ${cv.contact.email}
+• LinkedIn: ${cv.contact.linkedin.replace("https://", "")}
+• GitHub: ${cv.contact.github.replace("https://", "")}`,
 
     "git status": () => `On branch main
 Your branch is up to date with 'origin/main'.
