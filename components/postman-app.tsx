@@ -252,30 +252,14 @@ export function PostmanApp({ onMinimize, onMaximize, onClose, initialSection = "
       "GET /projects": {
         status: 200,
         responseTime: "52ms",
-        data: [
-          {
-            name: "El Nieto de Pascual",
-            type: "Blog Personal",
-            description:
-              language === "es"
-                ? "Blog personal sobre desarrollo backend, Python y tecnología. Comparto experiencias, tutoriales y reflexiones sobre el mundo del desarrollo."
-                : "Personal blog about backend development, Python and technology. I share experiences, tutorials and reflections about the development world.",
-            technologies: ["Python", "Django", "PostgreSQL", "HTML/CSS"],
-            status: "Activo",
-            url: "https://elnietodepascual.com",
-          },
-          {
-            name: "Portfolio Retro NES",
-            type: "Portfolio Personal",
-            description:
-              language === "es"
-                ? "Portfolio con estética retro inspirada en Nintendo NES. Diseño pixel art y animaciones nostálgicas."
-                : "Portfolio with retro aesthetic inspired by Nintendo NES. Pixel art design and nostalgic animations.",
-            technologies: ["HTML", "CSS", "JavaScript", "Pixel Art"],
-            status: "Completado",
-            url: "#",
-          },
-        ],
+        data: cv.projects.map((project) => ({
+          name: project.name,
+          type: project.type,
+          description: project.description,
+          technologies: project.stack,
+          status: project.status,
+          url: project.url ?? project.repo ?? null,
+        })),
       },
       "GET /blog": {
         status: 200,
