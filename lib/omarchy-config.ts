@@ -28,7 +28,14 @@ export const THEME_OPTIONS: ThemeOption[] = OMARCHY_THEMES.map((theme) => ({
 export const THEME_NAMES: string[] = THEME_OPTIONS.map((option) => option.id)
 
 /** Apps que `open <app>` y el lanzador pueden abrir. */
-export const APP_NAMES = ["terminal", "postman", "about", "experience", "projects", "education", "contact"]
+export const APP_NAMES = ["terminal", "postman", "about", "experience", "projects", "education", "contact", "cvweb"]
+
+/**
+ * URL de la web-curriculum embebida en la ventana "CV en línea" (id `cvweb`).
+ * La ventana es un iframe: el destino debe ser públicamente accesible (sin
+ * Vercel Deployment Protection) y permitir ser enmarcado.
+ */
+export const CV_WEB_URL = "https://api-app-portfolio-qtstar3ma-daniyipis-projects.vercel.app/"
 
 /** Mapa app/sección → endpoint de la app Postman. */
 export const SECTION_BY_APP: Record<string, string> = {

@@ -1,10 +1,11 @@
 "use client"
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { Code, Download, Monitor, Moon, Palette, Power, RotateCcw, Terminal as TerminalIcon } from "lucide-react"
+import { Code, Download, Globe, Monitor, Moon, Palette, Power, RotateCcw, Terminal as TerminalIcon } from "lucide-react"
 import { UbuntuDesktop } from "@/components/ubuntu-desktop"
 import { PostmanApp } from "@/components/postman-app"
 import { Terminal } from "@/components/terminal"
+import { CvWebWindow } from "@/components/cv-web-window"
 import { useTheme, isOmarchyTheme } from "@/components/theme-system"
 import { useCvData, PortfolioDataProvider } from "@/components/portfolio-data-provider"
 import { downloadCv as downloadCvFromApi } from "@/lib/api"
@@ -76,6 +77,10 @@ function DesktopSessionInner() {
     openWindow("terminal", { title: TERMINAL_TITLE })
   }, [openWindow])
 
+  const openCvWeb = useCallback(() => {
+    openWindow("cvweb", { title: "CV en línea" })
+  }, [openWindow])
+
   const openApp = useCallback(
     (app: string) => {
       const normalized = app.toLowerCase().trim()
@@ -88,9 +93,13 @@ function DesktopSessionInner() {
         openTerminal()
         return
       }
+      if (normalized === "cvweb" || normalized === "cv" || normalized === "whoami") {
+        openCvWeb()
+        return
+      }
       openPostman()
     },
-    [openPostman, openTerminal],
+    [openPostman, openTerminal, openCvWeb],
   )
 
   const resetToLandingState = useCallback(() => {
@@ -158,6 +167,15 @@ function DesktopSessionInner() {
         run: openTerminal,
       },
       {
+        id: "open-cvweb",
+        label: "Abrir CV en línea",
+        hint: "cvweb",
+        group: "apps",
+        icon: <Globe className="h-3.5 w-3.5" aria-hidden="true" />,
+        keywords: ["cv", "curriculum", "web", "whoami"],
+        run: openCvWeb,
+      },
+      {
         id: "download-cv",
         label: "Descargar CV",
         hint: "cv --download",
@@ -206,7 +224,7 @@ function DesktopSessionInner() {
     ]
 
     return [...sectionCommands, ...appCommands, ...themeCommands, ...powerCommands]
-  }, [openPostman, openTerminal, downloadCv, applyTheme, handleReboot, handleSuspend, requestShutdown])
+  }, [openPostman, openTerminal, openCvWeb, downloadCv, applyTheme, handleReboot, handleSuspend, requestShutdown])
 
   return (
     <>
@@ -218,6 +236,7 @@ function DesktopSessionInner() {
         onShutdown={requestShutdown}
         onOpenTerminal={openTerminal}
         onOpenPostmanApp={() => openPostman()}
+        onOpenCvWeb={openCvWeb}
       >
         <WindowLayer onOpenLauncher={() => setRofiOpen(true)}>
           <ManagedWindow id="postman" title={POSTMAN_TITLE} icon={<Code className="h-3.5 w-3.5" aria-hidden="true" />}>
@@ -237,6 +256,13 @@ function DesktopSessionInner() {
               onSuspend={handleSuspend}
               onShutdown={requestShutdown}
             />
+          </ManagedWindow>
+          <ManagedWindow
+            id="cvweb"
+            title="CV en línea"
+            icon={<Globe className="h-3.5 w-3.5" aria-hidden="true" />}
+          >
+            <CvWebWindow />
           </ManagedWindow>
         </WindowLayer>
       </UbuntuDesktop>
