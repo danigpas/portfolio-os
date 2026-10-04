@@ -51,11 +51,12 @@ export function Terminal({
   education         Abre Educación
   contact           Abre Contacto
   cv --download     Descarga el CV en PDF
+  cv --web          Abre el CV en línea (ventana cvweb)
   theme             Lista los temas disponibles
   theme <nombre>    Cambia el tema del sistema
   open <app>        Abre una app (${APP_NAMES.join(", ")})
   clear             Limpia la terminal
-  whoami            Usuario actual
+  whoami            Abre el CV en línea (identidad actual)
   reboot            Reinicia el sistema
   suspend           Suspende la sesión
   shutdown          Apaga el sistema`,
@@ -127,7 +128,10 @@ export function Terminal({
       setEntries([])
       return ""
     }
-    if (command === "whoami") return "guest"
+    if (command === "whoami") {
+      onOpenApp?.("cvweb")
+      return "guest — abriendo CV en línea…"
+    }
     if (command === "sudo") return "guest no está en el fichero sudoers. Este incidente será reportado."
     if (command === "theme") {
       if (!rest) return `Tema actual: ${theme}\nDisponibles: ${THEME_NAMES.join(", ")}`
@@ -142,7 +146,11 @@ export function Terminal({
         onDownloadCv?.()
         return "Descargando CV…"
       }
-      return "Uso: cv --download"
+      if (rest === "--web" || rest === "web") {
+        onOpenApp?.("cvweb")
+        return "Abriendo CV en línea…"
+      }
+      return "Uso: cv --download | cv --web"
     }
     if (command === "open") {
       if (!rest) return `Uso: open <app>. Apps: ${APP_NAMES.join(", ")}`
@@ -182,7 +190,7 @@ export function Terminal({
   const completions = (): string[] => {
     const tokens = input.split(/\s+/)
     if (tokens.length <= 1) {
-      return ["help", "about", "experience", "projects", "education", "contact", "skills", "cv --download", "theme", "open", "reboot", "suspend", "shutdown", "clear", "whoami"].filter((candidate) =>
+      return ["help", "about", "experience", "projects", "education", "contact", "skills", "cv --download", "cv --web", "theme", "open", "reboot", "suspend", "shutdown", "clear", "whoami"].filter((candidate) =>
         candidate.startsWith(input.trim().toLowerCase()),
       )
     }

@@ -7,6 +7,7 @@ import {
   Code,
   Download,
   Github,
+  Globe,
   GraduationCap,
   Linkedin,
   Mail,
@@ -29,6 +30,7 @@ interface UbuntuDesktopProps {
   onShutdown?: () => void
   onOpenTerminal?: () => void
   onOpenPostmanApp?: () => void
+  onOpenCvWeb?: () => void
   onCloseTerminal?: () => void
 }
 
@@ -53,6 +55,7 @@ export function UbuntuDesktop({
   onShutdown,
   onOpenTerminal,
   onOpenPostmanApp,
+  onOpenCvWeb,
   onCloseTerminal,
 }: UbuntuDesktopProps) {
   const reducedMotion = usePrefersReducedMotion()
@@ -105,6 +108,7 @@ export function UbuntuDesktop({
 
   const desktopIcons = [
     { id: "cv", icon: Download, label: "CV.pdf", action: handleDownloadCV },
+    { id: "cvweb", icon: Globe, label: "CV en línea", action: () => onOpenCvWeb?.() },
     { id: "github", icon: Github, label: "GitHub", action: () => handleExternalLink("https://github.com/danigpas") },
     {
       id: "linkedin",
