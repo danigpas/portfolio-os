@@ -1,0 +1,42 @@
+# Despliegue del backend del portfolio en el LXC de Proxmox.
+# Uso:  cp .env.example .env  &&  docker compose up -d --build
+#
+# Contexto de build = raiz del repo (backend/Dockerfile copia backend/ y public/).
+
+services:
+  api:
+    build:
+      context: ..
+      dockerfile: backend/Dockerfile
+    image: portfolio-backend:latest
+    container_name: portfolio-api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"          # accesible en la LAN del Proxmox (p.ej. 192.168.1.x:8000)
+    env_file:
+      - .env
+    mem_limit: 512m          # aislamiento; la API es ligera y sin estado
+    cpus: 1.0
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health', timeout=4)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  # Exposicion publica RECOMENDADA: Cloudflare Tunnel (TLS lo hace Cloudflare,
+  # sin nginx ni certificados locales). Crea el tunnel en el dashboard de
+  # Cloudflare (Zero Trust -> Networks -> Tunnels), pegalo al dominio
+  # api.danigpascual.dev -> http://api:8000 y pon el token en .env:
+  #   CLOUDFLARED_TOKEN=eyJ...
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: portfolio-cloudflared
+    restart: unless-stopped
+    command: tunnel run --token ${CLOUDFLARED_TOKEN}
+    depends_on:
+      - api
+    mem_limit: 128m
+    profiles: ["tunnel"]     # se levanta con: docker compose --profile tunnel up -d

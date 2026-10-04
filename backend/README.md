@@ -131,3 +131,49 @@ backend/
   réplicas conviene usar un backend compartido (Redis) en slowapi.
 - `POST /api/contact` no envía correos: registra el mensaje con logging
   estructurado y responde `202 Accepted` con una referencia.
+
+---
+
+## Despliegue en Proxmox (LXC + Docker Compose + Cloudflare Tunnel)
+
+Patrón idéntico al del LXC de PersonalOS (ver recomendación del agente de
+app de finanzas): CT nuevo dedicado, Docker Compose, TLS vía Cloudflare
+(sin nginx local) y healthcheck integrado.
+
+### 1. Crear el CT (lo hace el propietario)
+
+- Proxmox: **Create CT** → template **Debian 12/13**, 1 vCPU, 1 GB RAM
+  (512 MB sería justa con cloudflared), 8 GB disco, IP fija en la LAN
+  (p. ej. `192.168.1.201`), unprivileged.
+- Dentro del CT: `apt update && apt install -y docker.io docker-compose-v2 git`
+  y un usuario `deploy` con sudoers mínimo para docker.
+
+### 2. Levantar la API
+
+```bash
+git clone https://github.com/danigpas/portfolio-os.git
+cd portfolio-os/backend
+cp .env.example .env          # CORS ya trae danigpascual.dev
+docker compose up -d --build
+curl http://localhost:8000/api/health
+```
+
+### 3. Exponer públicamente (Cloudflare Tunnel)
+
+1. Cloudflare Zero Trust → **Networks → Tunnels** → Create tunnel → copia el token.
+2. Pégalo en `backend/.env` como `CLOUDFLARED_TOKEN=...` y añade el public
+   hostname `api.danigpascual.dev` → service `http://api:8000`.
+3. `docker compose --profile tunnel up -d` (levanta también cloudflared).
+
+### 4. Conectar el frontend
+
+En Vercel (portfolio-os → Settings → Environment Variables):
+`NEXT_PUBLIC_API_URL=https://api.danigpascual.dev` y redeploy.
+Sin esta variable la web funciona igual gracias al fallback offline-first.
+
+### 5. (Opcional) CD con runner self-hosted
+
+Los runners cloud de GitHub no llegan a la LAN; si quieres despliegue por
+push, instala un runner de GitHub Actions **dentro del CT** (igual que
+PersonalOS) con un workflow que haga `docker compose up -d --build` y smoke
+de `/api/health`.
