@@ -98,6 +98,9 @@ export function LandingPage() {
           <div className="mt-9 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center">
             <a
               href={contact.cvPath}
+              download
+              target="_blank"
+              rel="noreferrer"
               className="inline-flex items-center justify-center border border-[#e7e7ea]/30 px-5 py-3 text-sm font-medium text-[#e7e7ea] transition-colors hover:border-[#e7e7ea] hover:bg-[#e7e7ea] hover:text-[#0b0b0c]"
             >
               Descargar CV
