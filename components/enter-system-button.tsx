@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { useSystemEntry } from "@/components/system-entry"
 
@@ -12,6 +13,17 @@ interface EnterSystemButtonProps {
 export function EnterSystemButton({ variant = "primary", className = "" }: EnterSystemButtonProps) {
   const { enter, isBooted } = useSystemEntry()
   const isMobile = useIsMobile()
+  const [embedded, setEmbedded] = useState(false)
+
+  useEffect(() => {
+    // Si esta landing se muestra embebida (iframe del "CV en línea"),
+    // el escritorio no se bootea aquí: se enlaza a la web completa.
+    try {
+      setEmbedded(window.self !== window.top)
+    } catch {
+      setEmbedded(true)
+    }
+  }, [])
 
   if (isMobile) {
     return (
@@ -31,6 +43,19 @@ export function EnterSystemButton({ variant = "primary", className = "" }: Enter
     variant === "panel"
       ? "border-[#7ee787]/50 text-[#7ee787] hover:bg-[#7ee787] hover:text-[#0b0b0c]"
       : "border-[#f5b301] bg-[#f5b301] text-[#0b0b0c] hover:bg-[#f5b301]/85"
+
+  if (embedded) {
+    return (
+      <a
+        href="https://danigpascual.dev"
+        target="_top"
+        rel="noreferrer"
+        className={`${base} ${styles} ${className}`}
+      >
+        <span aria-hidden>▸</span>Ver escritorio interactivo
+      </a>
+    )
+  }
 
   return (
     <button type="button" onClick={enter} className={`${base} ${styles} ${className}`}>

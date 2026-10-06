@@ -35,7 +35,7 @@ export const APP_NAMES = ["terminal", "postman", "about", "experience", "project
  * La ventana es un iframe: el destino debe ser públicamente accesible (sin
  * Vercel Deployment Protection) y permitir ser enmarcado.
  */
-export const CV_WEB_URL = "https://api-app-portfolio-qtstar3ma-daniyipis-projects.vercel.app/"
+export const CV_WEB_URL = "https://cv.danigpascual.dev"
 
 /** Mapa app/sección → endpoint de la app Postman. */
 export const SECTION_BY_APP: Record<string, string> = {
