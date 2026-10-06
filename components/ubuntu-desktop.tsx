@@ -130,8 +130,8 @@ export function UbuntuDesktop({
         onShutdown={onShutdown}
       />
 
-      {/* Desktop icons (utilidades) */}
-      <div className="absolute right-4 top-12 z-10 flex flex-col gap-3">
+      {/* Desktop icons (utilidades): columna izquierda, centrada verticalmente */}
+      <div className="absolute left-4 top-1/2 z-10 flex -translate-y-1/2 flex-col gap-4">
         {desktopIcons.map((item, index) => {
           const Icon = item.icon
           return (
@@ -144,12 +144,12 @@ export function UbuntuDesktop({
               onClick={item.action}
               onMouseEnter={(event) => springIn(event.currentTarget)}
               onMouseLeave={(event) => springOut(event.currentTarget)}
-              className="group flex w-16 flex-col items-center gap-1 border border-transparent p-2 text-[var(--omarchy-fg)] hover:border-[var(--omarchy-border)] hover:bg-[var(--omarchy-surface)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--omarchy-accent)]"
+              className="group flex w-20 flex-col items-center gap-1.5 border border-transparent p-2 text-[var(--omarchy-fg)] hover:border-[var(--omarchy-border)] hover:bg-[var(--omarchy-surface)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--omarchy-accent)]"
             >
-              <span className="flex h-10 w-10 items-center justify-center border border-[var(--omarchy-border)] bg-[var(--omarchy-surface)] om-accent-text">
-                <Icon className="h-5 w-5" />
+              <span className="flex h-14 w-14 items-center justify-center border border-[var(--omarchy-border)] bg-[var(--omarchy-surface)] om-accent-text">
+                <Icon className="h-7 w-7" />
               </span>
-              <span className="text-[10px] leading-tight">{item.label}</span>
+              <span className="text-xs leading-tight">{item.label}</span>
             </button>
           )
         })}

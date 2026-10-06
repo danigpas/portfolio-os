@@ -1,17 +1,17 @@
 "use client"
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react"
+import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react"
 import { BootAnimation } from "@/components/boot-animation"
 import { DesktopSession } from "@/components/desktop-session"
 import { PWAServiceWorker } from "@/components/pwa-service-worker"
 import { useIsMobile } from "@/hooks/use-mobile"
 
-const VISITED_KEY = "omarchyVisited"
+/* Ya no se cachea la visita: el boot se muestra siempre */
 
 interface SystemEntryContextValue {
-  /** Entra al escritorio Omarchy (con boot la primera vez de la sesión). */
+  /** Entra al escritorio Omarchy (siempre con animación de boot). */
   enter: () => void
-  /** true si ya se ha booteado en esta sesión. */
+  /** true si ya se ha booteado en esta sesión (sólo para el label del botón). */
   isBooted: boolean
 }
 
@@ -31,8 +31,7 @@ type Stage = "landing" | "boot" | "desktop"
  *
  * - La landing siempre se renderiza en el servidor (SEO).
  * - El escritorio sólo arranca a petición (botón "Bootea el sistema").
- * - La animación de boot se muestra únicamente la primera vez de la sesión:
- *   después `sessionStorage.omarchyVisited=true` entra directo.
+ * - La animación de boot se muestra SIEMPRE al entrar (se puede saltar con ESC).
  * - En móvil (<768px) nunca se entra al escritorio; se muestra aviso.
  */
 export function SystemEntry({ children }: { children: ReactNode }) {
@@ -40,25 +39,12 @@ export function SystemEntry({ children }: { children: ReactNode }) {
   const [stage, setStage] = useState<Stage>("landing")
   const [isBooted, setIsBooted] = useState(false)
 
-  useEffect(() => {
-    const visited = window.sessionStorage.getItem(VISITED_KEY) === "true"
-    setIsBooted(visited)
-    if (visited && !isMobile) {
-      setStage("desktop")
-    } else if (isMobile) {
-      setStage("landing")
-    }
-  }, [isMobile])
-
   const enter = useCallback(() => {
     if (isMobile) return
-    const visited = window.sessionStorage.getItem(VISITED_KEY) === "true"
-    setIsBooted(visited)
-    setStage(visited ? "desktop" : "boot")
+    setStage("boot")
   }, [isMobile])
 
   const handleBootComplete = useCallback(() => {
-    window.sessionStorage.setItem(VISITED_KEY, "true")
     setIsBooted(true)
     setStage("desktop")
   }, [])
