@@ -37,7 +37,7 @@ export function CvWebWindow() {
           title="CV en línea de Daniel González Pascual"
           className="h-full w-full border-0 bg-white"
           loading="lazy"
-          sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+          sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-downloads allow-top-navigation-by-user-activation"
         />
       </div>
       <div className="border-t border-[var(--omarchy-border,#2a2b3d)] px-3 py-1.5 font-[family-name:var(--font-jetbrains-mono),ui-monospace,monospace] text-[10px] text-[var(--omarchy-muted,#9aa5ce)]">
