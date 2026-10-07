@@ -47,7 +47,7 @@ app Postman (`LOCAL`). La web nunca se queda en blanco.
 ## ✨ Características
 
 - **🖥️ Escritorio Omarchy:** waybar con workspaces 1-5 mapeados a secciones,
-  ventanas arrastrables/redimensionables, Alt-Tab y estados de energía.
+  ventanas arrastrables/redimensionables, Alt-Tab y estados de energía funcionales.
 - **👨‍💻 App tipo Postman:** consume la API FastAPI real, con skeletons estilo
   Omarchy, estados de error y badge `API`/`LOCAL` según el origen del dato.
 - **⌨️ Terminal y rofi (Ctrl+K):** navegación real por secciones, `cv --download`,
