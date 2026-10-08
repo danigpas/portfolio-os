@@ -137,12 +137,12 @@ export const cvData: Record<Language, CVData> = {
         current: true,
         type: "Jornada completa",
         summary:
-          "Desarrollo de aplicaciones y servicios backend en Python en Inforyde, consultora especializada en el mercado eléctrico ubicada en Madrid.",
+          "Desarrollo backend en Python para una comercializadora suiza de electricidad y gas: servicios y procesos de datos sobre distintos proyectos del sector energético.",
         highlights: [
-          "Análisis, desarrollo y mantenimiento de soluciones para clientes del sector energético.",
-          "Trabajo en equipos multidisciplinares con buenas prácticas de desarrollo, testing y control de versiones.",
+          "Procesamiento de grandes volúmenes de datos con PySpark sobre AWS.",
+          "Integración y despliegue continuo con Docker y Jenkins, gestión ágil con Jira y equipos multidisciplinares.",
         ],
-        stack: ["Python", "FastAPI", "SQL", "Git"],
+        stack: ["Python", "PySpark", "AWS", "Docker", "Jenkins", "Jira", "Git"],
       },
       {
         id: "disofic-backend",
@@ -184,14 +184,14 @@ export const cvData: Record<Language, CVData> = {
     ],
     education: [
       {
-        id: "daw",
-        title: "Grado Superior en Desarrollo de Aplicaciones Web (DAW)",
+        id: "asir",
+        title: "Grado Superior en Administración de Sistemas Informáticos en Red (ASIR)",
         institution: "Junta de Andalucía",
         location: "Málaga, España",
-        period: "Sept 2025 - Jun 2027",
+        period: "Sept 2026 - Jun 2028",
         status: "En curso",
         description:
-          "Cursando actualmente el Grado Superior en Desarrollo de Aplicaciones Web para ampliar conocimientos en tecnologías frontend y fullstack.",
+          "Cursando actualmente el Grado Superior en Administración de Sistemas Informáticos en Red para ampliar conocimientos en sistemas, redes e infraestructura.",
         tags: [],
       },
       {
@@ -266,7 +266,9 @@ export const cvData: Record<Language, CVData> = {
     skills: [
       { category: "Backend", items: ["Python", "FastAPI", "Django", "Celery", "Redis", "RabbitMQ"] },
       { category: "Bases de datos", items: ["PostgreSQL", "MySQL", "Oracle", "SQL"] },
-      { category: "Herramientas", items: ["Docker", "Git", "Linux", "CI/CD"] },
+      { category: "Datos", items: ["PySpark"] },
+      { category: "Cloud & CI/CD", items: ["AWS", "Jenkins", "Docker", "Jira"] },
+      { category: "Herramientas", items: ["Git", "Linux", "Proxmox"] },
     ],
     contact: { ...contact },
     meta: {
